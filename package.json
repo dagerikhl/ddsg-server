@@ -17,5 +17,11 @@
         "email": "dagerikhl@gmail.com",
         "url": "https://github.com/dagerikhl"
     },
-    "license": "GPL-3.0"
+    "license": "GPL-3.0",
+    "dependencies": {
+        "express": "^4.16.2"
+    },
+    "devDependencies": {
+        "nodemon": "^1.14.12"
+    }
 }
