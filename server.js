@@ -7,7 +7,7 @@ const app = express();
 const port = 8000;
 
 // Register routes
-require('./app/routes')(app, {});
+require('./app/routes')(app);
 
 // Listen on port
 app.listen(port, () => {
