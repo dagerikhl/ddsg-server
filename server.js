@@ -11,5 +11,5 @@ require('./app/routes')(app, {});
 
 // Listen on port
 app.listen(port, () => {
-    console.log('Server started on port ' + port);
+    console.log('Server started on port ' + port + '. Listening...');
 });
