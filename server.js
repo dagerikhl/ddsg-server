@@ -13,3 +13,6 @@ require('./app/routes')(app, {});
 app.listen(port, () => {
     console.log('Server started on port ' + port + '. Listening...');
 });
+
+// Update data from sources
+// TODO Setup listening on data sources at intervals

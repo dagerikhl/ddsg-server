@@ -1,6 +1,9 @@
+import { FileHandler } from '../services/file-handler';
+
+const fileHandler = new FileHandler();
+
 module.exports = (app) => {
     app.get('/entities', (req, res) => {
-        // TODO Impl. serving of actual object file from endpoint
-        res.json({ 'TEST': 'This is a test.' });
+        res.json(fileHandler.getFileContent('entities'));
     });
 };
