@@ -1,4 +1,5 @@
 const express = require('express');
+const schedule = require('node-schedule');
 
 // Register Express app
 const app = express();
@@ -14,14 +15,15 @@ app.listen(port, () => {
     console.log('Server started on port ' + port + '. Listening...');
 });
 
-// Update data from sources
-// TODO Setup listening on data sources at intervals
+// CRON syntax: '0 0 * * *' = once a day, at 00:00
+schedule.scheduleJob('0 0 * * *', updateEntitiesFromDataSources);
 
-function updateSourceDataPipe() {
-    // CAPEC source
+function updateEntitiesFromDataSources() {
+    // Fetch CAPEC source
     const capecVersion = getNewestVersionOfSource('capec');
     const capecData = fetchCapecData(capecVersion);
-    // CWE source
+
+    // Fetch CWE source
     const cweVersion = getNewestVersionOfSource('cwe');
     const cweData = fetchCweData(cweVersion);
 

@@ -1,13 +1,21 @@
-// TODO Scrape all sources for version number; make as robust as possible
 function getNewestVersionOfSource(source) {
+    let version = null;
     switch (source.toLowerCase()) {
     case 'capec':
         // TODO Scrape website for version nr.
-        return '2.11';
+        version = '2.11';
+        break;
     case 'cwe':
         // TODO Scrape website for version nr.
-        return '2.11';
+        version = '3.0';
+        break;
     default:
         throw `Data source does not exist: ${source}`;
     }
+
+    if (version === null) {
+        throw `Could not scrape ${source.toUpperCase()} newest version.`;
+    }
+
+    return version;
 }
