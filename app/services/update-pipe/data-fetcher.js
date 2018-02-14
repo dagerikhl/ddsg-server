@@ -1,34 +1,21 @@
+const xmljs = require('xml-js');
+
 const httpClient = require('../http-client');
 
-// TODO Make sure the data is actually set before return, suspect async/promise/cb errors
-function fetchCapecData(version) {
-    let data = {};
+function fetchCapecData(version, cb) {
     httpClient.get(`https://capec.mitre.org/data/xml/capec_v${version}.xml`, (res) => {
-        // TODO Ensure correctness of data
-        data = res;
+        const json = xmljs.xml2js(res, { compact: true });
+        cb(json);
     });
-
-    if (data === null) {
-        throw 'Could not get CAPEC data.';
-    }
-
-    return data;
 }
 
-function fetchCweData(version) {
-    let data = {};
+function fetchCweData(version, cb) {
     httpClient.get(`https://cwe.mitre.org/data/xml/cwec_v${version}.xml.zip`, (res) => {
         // TODO Process ZIP
-        let unzipped = res;
-        // TODO Ensure correctness of data
-        data = unzipped;
+        const unzipped = res;
+        const json = xmljs.xml2js(unzipped, { compact: true });
+        cb(json);
     });
-
-    if (data === null) {
-        throw 'Could not get CWE data.';
-    }
-
-    return data;
 }
 
 module.exports = {
