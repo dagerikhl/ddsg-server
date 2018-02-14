@@ -16,3 +16,21 @@ app.listen(port, () => {
 
 // Update data from sources
 // TODO Setup listening on data sources at intervals
+
+function updateSourceDataPipe() {
+    // CAPEC source
+    const capecVersion = getNewestVersionOfSource('capec');
+    const capecData = fetchCapecData(capecVersion);
+    // CWE source
+    const cweVersion = getNewestVersionOfSource('cwe');
+    const cweData = fetchCweData(cweVersion);
+
+    const entities = generateEntities(capecData, cweData);
+
+    const data = {
+        timestamp: Date.now() || new Date().getTime(),
+        entities: entities
+    };
+
+    setFileContent('entities', data);
+}
