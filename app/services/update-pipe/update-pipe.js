@@ -1,3 +1,5 @@
+const fileHandler = require('../file-handler');
+
 const versionScraper = require('./version-scraper');
 const dataFetcher = require('./data-fetcher');
 const entitiesGenerator = require('./entities-generator');
@@ -18,7 +20,7 @@ function updateEntitiesFromDataSources() {
         entities: entities
     };
 
-    setFileContent('entities', data);
+    fileHandler.setFileContent('entities', data);
 }
 
 module.exports = {
