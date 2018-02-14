@@ -1,9 +1,12 @@
 const express = require('express');
 const schedule = require('node-schedule');
+
 const config = require('./config');
 
+const updatePipe = require('./app/services/update-pipe/update-pipe');
+
 // Update entities on a schedule, CRON syntax: '0 0 * * *' = once a day at 00:00
-schedule.scheduleJob('0 0 * * *', updateEntitiesFromDataSources);
+schedule.scheduleJob('0 0 * * *', updatePipe.updateEntitiesFromDataSources);
 
 // Register Express app
 const app = express();

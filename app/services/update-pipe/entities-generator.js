@@ -5,3 +5,7 @@ function generateEntities(capecData, cweData) {
         cweData: cweData
     };
 }
+
+module.exports = {
+    generateEntities
+};

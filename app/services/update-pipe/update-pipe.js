@@ -1,13 +1,17 @@
+const versionScraper = require('./version-scraper');
+const dataFetcher = require('./data-fetcher');
+const entitiesGenerator = require('./entities-generator');
+
 function updateEntitiesFromDataSources() {
     // Fetch CAPEC source
-    const capecVersion = getNewestVersionOfSource('capec');
-    const capecData = fetchCapecData(capecVersion);
+    const capecVersion = versionScraper.getNewestVersionOfSource('capec');
+    const capecData = dataFetcher.fetchCapecData(capecVersion);
 
     // Fetch CWE source
-    const cweVersion = getNewestVersionOfSource('cwe');
-    const cweData = fetchCweData(cweVersion);
+    const cweVersion = versionScraper.getNewestVersionOfSource('cwe');
+    const cweData = dataFetcher.fetchCweData(cweVersion);
 
-    const entities = generateEntities(capecData, cweData);
+    const entities = entitiesGenerator.generateEntities(capecData, cweData);
 
     const data = {
         timestamp: Date.now() || new Date().getTime(),
@@ -16,3 +20,7 @@ function updateEntitiesFromDataSources() {
 
     setFileContent('entities', data);
 }
+
+module.exports = {
+    updateEntitiesFromDataSources
+};

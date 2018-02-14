@@ -19,3 +19,7 @@ function getNewestVersionOfSource(source) {
 
     return version;
 }
+
+module.exports = {
+    getNewestVersionOfSource
+};

@@ -28,3 +28,8 @@ function fetchCweData(version) {
 
     return data;
 }
+
+module.exports = {
+    fetchCapecData,
+    fetchCweData
+};
