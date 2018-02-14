@@ -1,13 +1,13 @@
-function get(url, cb) {
-    const req = new XMLHttpRequest();
-    req.onreadystatechange = () => {
-        if (req.readyState === 4 && req.status === 200) {
-            cb(req.responseText);
-        }
-    };
+const axios = require('axios');
 
-    req.open('GET', url, true);
-    req.send(null);
+function get(url, cb) {
+    axios.get(url)
+        .then(response => {
+            cb(response.data);
+        })
+        .catch(error => {
+            console.log(error);
+        })
 }
 
 module.exports = {
