@@ -6,21 +6,31 @@ const entitiesGenerator = require('./entities-generator');
 
 function updateEntitiesFromDataSources() {
     // Fetch CAPEC source
-    const capecVersion = versionScraper.getNewestVersionOfSource('capec');
-    const capecData = dataFetcher.fetchCapecData(capecVersion);
+    versionScraper.getNewestVersionOfSource('capec', (version) => {
+        console.log(version);
+        dataFetcher.fetchCapecData(version, (data) => {
+            // TODO
+            console.log(data);
+        });
+    });
 
     // Fetch CWE source
-    const cweVersion = versionScraper.getNewestVersionOfSource('cwe');
-    const cweData = dataFetcher.fetchCweData(cweVersion);
+    versionScraper.getNewestVersionOfSource('cwe', (version) => {
+        console.log(version);
+        dataFetcher.fetchCweData(version, (data) => {
+            // TODO
+            console.log(data);
+        });
+    });
 
-    const entities = entitiesGenerator.generateEntities(capecData, cweData);
+    // const entities = entitiesGenerator.generateEntities(capecData, cweData);
 
-    const data = {
-        timestamp: Date.now() || new Date().getTime(),
-        entities
-    };
-
-    fileHandler.setFileContent('entities', data);
+    // const data = {
+    //     timestamp: Date.now() || new Date().getTime(),
+    //     entities
+    // };
+    //
+    // fileHandler.setFileContent('entities', data);
 }
 
 module.exports = {

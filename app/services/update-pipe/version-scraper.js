@@ -1,23 +1,24 @@
-function getNewestVersionOfSource(source) {
-    let version = null;
+const Xray = require('x-ray');
+
+const xray = Xray();
+
+function getNewestVersionOfSource(source, cb) {
     switch (source.toLowerCase()) {
     case 'capec':
-        // TODO Scrape website for version nr.
-        version = '2.11';
+        xray('https://capec.mitre.org/data/index.html', '.header')((err, res) => {
+            const version = res.match(/(\d\.?)+/g)[0];
+            cb(version);
+        });
         break;
     case 'cwe':
-        // TODO Scrape website for version nr.
-        version = '3.0';
+        xray('https://cwe.mitre.org/data/index.html', '.header')((err, res) => {
+            const version = res.match(/(\d\.?)+/g)[0];
+            cb(version);
+        });
         break;
     default:
         throw `Data source does not exist: ${source}`;
     }
-
-    if (version === null) {
-        throw `Could not scrape ${source.toUpperCase()} newest version.`;
-    }
-
-    return version;
 }
 
 module.exports = {
