@@ -1,4 +1,4 @@
-function httpGet(url, cb) {
+function get(url, cb) {
     const req = new XMLHttpRequest();
     req.onreadystatechange = () => {
         if (req.readyState === 4 && req.status === 200) {
@@ -9,3 +9,7 @@ function httpGet(url, cb) {
     req.open('GET', url, true);
     req.send(null);
 }
+
+module.exports = {
+    get
+};

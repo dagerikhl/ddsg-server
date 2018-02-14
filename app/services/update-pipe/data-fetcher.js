@@ -1,7 +1,9 @@
+const httpClient = require('../http-client');
+
 // TODO Make sure the data is actually set before return, suspect async/promise/cb errors
 function fetchCapecData(version) {
     let data = {};
-    httpGet(`https://capec.mitre.org/data/xml/capec_v${version}.xml`, (res) => {
+    httpClient.get(`https://capec.mitre.org/data/xml/capec_v${version}.xml`, (res) => {
         // TODO Ensure correctness of data
         data = res;
     });
@@ -15,7 +17,7 @@ function fetchCapecData(version) {
 
 function fetchCweData(version) {
     let data = {};
-    httpGet(`https://cwe.mitre.org/data/xml/cwec_v${version}.xml.zip`, (res) => {
+    httpClient.get(`https://cwe.mitre.org/data/xml/cwec_v${version}.xml.zip`, (res) => {
         // TODO Process ZIP
         let unzipped = res;
         // TODO Ensure correctness of data

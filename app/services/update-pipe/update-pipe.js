@@ -17,7 +17,7 @@ function updateEntitiesFromDataSources() {
 
     const data = {
         timestamp: Date.now() || new Date().getTime(),
-        entities: entities
+        entities
     };
 
     fileHandler.setFileContent('entities', data);
