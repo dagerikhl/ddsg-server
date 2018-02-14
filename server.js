@@ -13,12 +13,13 @@ const app = express();
 // Register routes
 require('./app/routes')(app);
 
-// Listen on port
+// Listen on host port
 app.listen(+process.env.PORT, process.env.HOST, () => {
     console.log(`Server started on port ${process.env.PORT}. Listening...`);
 });
 
 // Keep data up to date
+console.log('Updating data from sources...');
 if (process.env.NODE_ENV === 'production') {
     // Update entities on a schedule, CRON syntax: '0 0 * * *' = once a day at 00:00
     schedule.scheduleJob('0 0 * * *', updatePipe.updateEntitiesFromDataSources);
@@ -26,3 +27,4 @@ if (process.env.NODE_ENV === 'production') {
     // Always update when developing
     updatePipe.updateEntitiesFromDataSources();
 }
+console.log('Done updating data from sources.');
