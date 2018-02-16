@@ -26,8 +26,8 @@ function fetchUpdatedDataFromSources() {
             objects.capecObjects = data['capec:Attack_Pattern_Catalog']['capec:Attack_Patterns']['capec:Attack_Pattern'];
 
             if (process.env.LOCAL_JSON_STORE === 'true') {
-                fileHandler.setFileContent('capecObjects.json', JSON.stringify(data));
-                fileHandler.setFileContent('attackPatterns.json', JSON.stringify(objects.capecObjects));
+                fileHandler.setFileContent('capecObjects.json', JSON.stringify(data, null, 4));
+                fileHandler.setFileContent('attackPatterns.json', JSON.stringify(objects.capecObjects, null, 4));
             }
 
             filterAndGenerateEntities();
@@ -40,8 +40,8 @@ function fetchUpdatedDataFromSources() {
             objects.cweObjects = data['Weakness_Catalog']['Weaknesses']['Weakness'];
 
             if (process.env.LOCAL_JSON_STORE === 'true') {
-                fileHandler.setFileContent('cweObjects.json', JSON.stringify(data));
-                fileHandler.setFileContent('weaknesses.json', JSON.stringify(objects.cweObjects));
+                fileHandler.setFileContent('cweObjects.json', JSON.stringify(data, null, 4));
+                fileHandler.setFileContent('weaknesses.json', JSON.stringify(objects.cweObjects, null, 4));
             }
 
             filterAndGenerateEntities();
