@@ -1,66 +1,79 @@
 const fileHandler = require('../file-handler');
 
-const versionScraper = require('./version-scraper');
 const dataFetcher = require('./data-fetcher');
 const entitiesGenerator = require('./entities-generator');
+const filterer = require('./filterer');
+const versionScraper = require('./version-scraper');
 
-// State
-let capecObjects = null;
-let cweObjects = null;
+// Local state
+let objects = {
+    capecObjects: null,
+    cweObjects: null,
+    capecObjectsFiltered: null,
+    cweObjectsFiltered: null
+};
 
-function updateEntitiesFromDataSources() {
+let activeFilters = [
+    'owasp'
+];
+
+function fetchUpdatedDataFromSources() {
     console.log('Updating data from sources...');
 
     // Fetch CAPEC source
     versionScraper.getNewestVersionOfSource('capec', (version) => {
         dataFetcher.fetchCapecData(version, (data) => {
-            // DEBUG
-            // fileHandler.setFileContent('capecObjects.json', JSON.stringify(data));
-            const capecAllObjects = data['capec:Attack_Pattern_Catalog']['capec:Attack_Patterns']['capec:Attack_Pattern'];
-            // TODO Filter results on OWASP Top 10
-            capecObjects = /* TODO Filter */capecAllObjects;
+            objects.capecObjects = data['capec:Attack_Pattern_Catalog']['capec:Attack_Patterns']['capec:Attack_Pattern'];
 
-            generateEntitiesFromAllSources(capecObjects, cweObjects);
+            if (process.env.LOCAL_JSON_STORE === 'true') {
+                fileHandler.setFileContent('capecObjects.json', JSON.stringify(data));
+                fileHandler.setFileContent('attackPatterns.json', JSON.stringify(objects.capecObjects));
+            }
+
+            filterAndGenerateEntities();
         });
     });
 
     // Fetch CWE source
     versionScraper.getNewestVersionOfSource('cwe', (version) => {
         dataFetcher.fetchCweData(version, (data) => {
-            // DEBUG
-            // fileHandler.setFileContent('cweObjects.json', JSON.stringify(data));
-            const cweAllObjects = data['Weakness_Catalog']['Weaknesses']['Weakness'];
-            // TODO Filter results on OWASP Top 10
-            cweObjects = /* TODO Filter */cweAllObjects;
+            objects.cweObjects = data['Weakness_Catalog']['Weaknesses']['Weakness'];
 
-            generateEntitiesFromAllSources(capecObjects, cweObjects);
+            if (process.env.LOCAL_JSON_STORE === 'true') {
+                fileHandler.setFileContent('cweObjects.json', JSON.stringify(data));
+                fileHandler.setFileContent('weaknesses.json', JSON.stringify(objects.cweObjects));
+            }
+
+            filterAndGenerateEntities();
         });
     });
 }
 
-function generateEntitiesFromAllSources(capecObjects, cweObjects) {
-    // Only generate when we have all sources
-    if (!capecObjects || !cweObjects) {
+function filterAndGenerateEntities() {
+    // Only proceed when we have fetched all sources
+    if (!objects.capecObjects || !objects.cweObjects) {
         return;
     }
 
-    entitiesGenerator.generateEntities(capecObjects, cweObjects, (entities) => {
-        const data = {
-            timestamp: Date.now() || new Date().getTime(),
-            entities
-        };
+    filterer.filter(objects, activeFilters);
+    entitiesGenerator.generateEntities(objects, saveEntities);
+}
 
-        const jsonData = JSON.stringify(data);
-        fileHandler.setFileContent('entities.json', jsonData);
+function saveEntities(entities) {
+    const data = {
+        timestamp: Date.now() || new Date().getTime(),
+        entities
+    };
 
-        // Clear local variables
-        capecObjects = null;
-        cweObjects = null;
+    const jsonData = JSON.stringify(data);
+    fileHandler.setFileContent('entities.json', jsonData);
 
-        console.log('Done updating data from sources.');
-    });
+    // Clear local state
+    objects = {};
+
+    console.log('Done updating data from sources.');
 }
 
 module.exports = {
-    updateEntitiesFromDataSources
+    fetchUpdatedDataFromSources
 };

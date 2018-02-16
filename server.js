@@ -21,8 +21,8 @@ app.listen(+process.env.PORT, process.env.HOST, () => {
 // Keep data up to date
 if (process.env.NODE_ENV === 'production') {
     // Update entities on a schedule, CRON syntax: '0 0 * * *' = once a day at 00:00
-    schedule.scheduleJob('0 0 * * *', updatePipe.updateEntitiesFromDataSources);
+    schedule.scheduleJob('0 0 * * *', updatePipe.fetchUpdatedDataFromSources);
 } else if (process.env.NODE_ENV === 'development') {
     // Always update when developing
-    updatePipe.updateEntitiesFromDataSources();
+    updatePipe.fetchUpdatedDataFromSources();
 }
