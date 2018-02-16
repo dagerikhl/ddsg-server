@@ -23,11 +23,10 @@ function fetchUpdatedDataFromSources() {
     // Fetch CAPEC source
     versionScraper.getNewestVersionOfSource('capec', (version) => {
         dataFetcher.fetchCapecData(version, (data) => {
-            objects.capecObjects = data['capec:Attack_Pattern_Catalog']['capec:Attack_Patterns']['capec:Attack_Pattern'];
+            objects.capecObjects = data;
 
             if (process.env.LOCAL_JSON_STORE === 'true') {
                 fileHandler.setFileContent('capecObjects.json', JSON.stringify(data, null, 4));
-                fileHandler.setFileContent('attackPatterns.json', JSON.stringify(objects.capecObjects, null, 4));
             }
 
             filterAndGenerateEntities();
@@ -37,11 +36,10 @@ function fetchUpdatedDataFromSources() {
     // Fetch CWE source
     versionScraper.getNewestVersionOfSource('cwe', (version) => {
         dataFetcher.fetchCweData(version, (data) => {
-            objects.cweObjects = data['Weakness_Catalog']['Weaknesses']['Weakness'];
+            objects.cweObjects = data;
 
             if (process.env.LOCAL_JSON_STORE === 'true') {
                 fileHandler.setFileContent('cweObjects.json', JSON.stringify(data, null, 4));
-                fileHandler.setFileContent('weaknesses.json', JSON.stringify(objects.cweObjects, null, 4));
             }
 
             filterAndGenerateEntities();
@@ -55,8 +53,8 @@ function filterAndGenerateEntities() {
         return;
     }
 
-    filterer.filter(objects, activeFilters);
-    entitiesGenerator.generateEntities(objects, saveEntities);
+    filterer.filterByActiveFilters(objects, activeFilters);
+    entitiesGenerator.generateStixEntities(objects, saveEntities);
 }
 
 function saveEntities(entities) {
