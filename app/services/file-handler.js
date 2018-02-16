@@ -1,23 +1,47 @@
 const fs = require('fs');
 const path = require('path');
+const unzip = require('unzip');
 
 const basePath = 'data';
 
-function getFileContent(filename) {
-    const filePath = path.join(basePath, filename + '.json');
-    const rawContent = fs.readFileSync(filePath);
+function getFileContent(fileName) {
+    const rawContent = fs.readFileSync(path.join(basePath, fileName));
 
-    return JSON.parse(rawContent.toString());
+    return rawContent.toString();
 }
 
-function setFileContent(filename, content) {
-    const filePath = path.join(basePath, filename + '.json');
-    const rawContent = JSON.stringify(content);
+function setFileContent(fileName, content) {
+    fs.writeFileSync(path.join(basePath, fileName), content);
+}
 
-    fs.writeFileSync(filePath, rawContent);
+function removeFile(fileName) {
+    if (fs.existsSync(path.join(basePath, fileName))) {
+        fs.unlink(path.join(basePath, fileName), (err) => {
+            if (err) {
+                console.log(`Error removing file ${fileName}:`, err);
+            }
+        });
+    }
+}
+
+function extractEntryFromZipFile(zipFileName, entryFileName, cb) {
+    fs.createReadStream(path.join(basePath, zipFileName))
+        .pipe(unzip.Parse())
+        .on('entry', (entry) => {
+            if (entry.path === entryFileName) {
+                const stream = fs.createWriteStream(path.join(basePath, entryFileName));
+                stream.addListener('close', cb);
+
+                entry.pipe(stream);
+            } else {
+                entry.autodrain();
+            }
+        });
 }
 
 module.exports = {
     getFileContent,
-    setFileContent
+    setFileContent,
+    removeFile,
+    extractEntryFromZipFile
 };

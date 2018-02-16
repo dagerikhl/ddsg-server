@@ -6,12 +6,20 @@ function getNewestVersionOfSource(source, cb) {
     switch (source.toLowerCase()) {
     case 'capec':
         xray('https://capec.mitre.org/data/index.html', '.header')((err, res) => {
+            if (err) {
+                console.log(err);
+            }
+
             const version = res.match(/(\d\.?)+/g)[0];
             cb(version);
         });
         break;
     case 'cwe':
         xray('https://cwe.mitre.org/data/index.html', '.header')((err, res) => {
+            if (err) {
+                console.log(err);
+            }
+
             const version = res.match(/(\d\.?)+/g)[0];
             cb(version);
         });
