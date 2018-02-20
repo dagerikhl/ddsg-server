@@ -15,53 +15,65 @@ function filterByActiveFilters(objects, activeFilters) {
 
 function byOwaspTop10(objects) {
     // Extract all direct members (classes, bases, and variants) of OWASP Top 10 categories listed in OWASP Top 10 view
-    const owaspView = objects.cweObjects['Weakness_Catalog']['Views']['View']
+    const view = objects.cweObjects['Weakness_Catalog']['Views']['View']
         .filter((e) => {
             return e['_attributes']['ID'] === '928';
         })[0];
 
-    const owaspCategoryIds = owaspView['Members']['Has_Member']
+    const categoryIds = view['Members']['Has_Member']
         .map((e) => {
             return e['_attributes']['CWE_ID'];
         });
-    const owaspCategories = objects.cweObjects['Weakness_Catalog']['Categories']['Category']
+    const categories = objects.cweObjects['Weakness_Catalog']['Categories']['Category']
         .filter((e) => {
-            return owaspCategoryIds.includes(e['_attributes']['ID']);
+            return categoryIds.includes(e['_attributes']['ID']);
         });
 
-    const owaspCategoryMemberIds = [];
-    owaspCategories.forEach((c) => {
-        if (!c['Relationships']) {
-            return;
-        }
+    const memberIdsByCategory = {};
+    categories
+        .forEach((c) => {
+            if (!c['Relationships']) {
+                return;
+            }
 
-        const members = c['Relationships']['Has_Member'];
-        if (members instanceof Array) {
-            c['Relationships']['Has_Member']
-                .map((e) => {
-                    owaspCategoryMemberIds.push(e['_attributes']['CWE_ID']);
-                });
-        } else {
-            owaspCategoryMemberIds.push(c['Relationships']['Has_Member']['_attributes']['CWE_ID']);
-        }
-    });
-    const owaspCategoryMembers = objects.cweObjects['Weakness_Catalog']['Weaknesses']['Weakness']
+            if (!(memberIdsByCategory[c['_attributes']['ID']] instanceof Array)) {
+                memberIdsByCategory[c['_attributes']['ID']] = [];
+            }
+
+            const members = c['Relationships']['Has_Member'];
+            if (members instanceof Array) {
+                members
+                    .map((e) => {
+                        memberIdsByCategory[c['_attributes']['ID']].push(e['_attributes']['CWE_ID']);
+                    });
+            } else {
+                memberIdsByCategory[c['_attributes']['ID']].push(members['_attributes']['CWE_ID']);
+            }
+        });
+    const categoryMembers = objects.cweObjects['Weakness_Catalog']['Weaknesses']['Weakness']
         .filter((e) => {
-            return owaspCategoryMemberIds.includes(e['_attributes']['ID']);
+            for (let categoryId in memberIdsByCategory) {
+                if (memberIdsByCategory[categoryId].includes(e['_attributes']['ID'])) {
+                    return true;
+                }
+            }
+
+            return false;
         });
 
-    // Filter all weaknesses on owasp
-    objects.cweObjectsFiltered = owaspCategoryMembers;
+    objects.cweObjectsFiltered = categoryMembers;
 
-    // TODO Filter all attack patterns on relationships with the filtered weaknesses
+    // Extract all attack patterns related to OWASP Top 10 weaknesses
 
     // DEBUG
-    writeTempJson(owaspCategoryMembers);
+    writeTempJson(categoryMembers);
 }
 
 // DEBUG
 function writeTempJson(v) {
+    console.log('// DEBUG Writing...');
     fileHandler.setFileContent('test.json', JSON.stringify(v, null, 4));
+    console.log('// DEBUG Written.');
 }
 
 module.exports = {

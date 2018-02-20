@@ -64,7 +64,12 @@ function saveEntities(entities) {
         entities
     };
 
-    const jsonData = JSON.stringify(data);
+    let jsonData;
+    if (process.env.NODE_ENV === 'development') {
+        jsonData = JSON.stringify(data, null, 4);
+    } else {
+        jsonData = JSON.stringify(data);
+    }
     fileHandler.setFileContent('entities.json', jsonData);
 
     // Clear local state
