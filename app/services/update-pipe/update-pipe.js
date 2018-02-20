@@ -1,4 +1,5 @@
 const fileHandler = require('../file-handler');
+const utilities = require('../utilities');
 
 const sourceFetcher = require('./source-fetcher');
 const entitiesGenerator = require('./entities-generator');
@@ -60,7 +61,7 @@ function filterAndGenerateEntities() {
 
 function saveEntities(entities) {
     const data = {
-        timestamp: Date.now() || new Date().getTime(),
+        created: utilities.timestamp(),
         entities
     };
 
