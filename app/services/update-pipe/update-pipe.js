@@ -5,6 +5,11 @@ const entitiesGenerator = require('./entities-generator');
 const filterer = require('./filterer');
 const versionScraper = require('./version-scraper');
 
+// Local configuration
+const activeFilters = [
+    'owasp'
+];
+
 // Local state
 let objects = {
     capecObjects: null,
@@ -12,10 +17,6 @@ let objects = {
     capecObjectsFiltered: null,
     cweObjectsFiltered: null
 };
-
-let activeFilters = [
-    'owasp'
-];
 
 function fetchUpdatedDataFromSources() {
     console.log('Updating data from sources...');
