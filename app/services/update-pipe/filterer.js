@@ -15,45 +15,45 @@ function filterByActiveFilters(objects, activeFilters) {
 
 function byOwaspTop10(objects) {
     // Extract all direct members (classes, bases, and variants) of OWASP Top 10 categories listed in OWASP Top 10 view
-    const view = objects.cweObjects['Weakness_Catalog']['Views']['View']
+    const cweView = objects.cweObjects['Weakness_Catalog']['Views']['View']
         .filter((e) => {
             return e['_attributes']['ID'] === '928';
         })[0];
 
-    const categoryIds = view['Members']['Has_Member']
+    const cweCategoryIds = cweView['Members']['Has_Member']
         .map((e) => {
             return e['_attributes']['CWE_ID'];
         });
-    const categories = objects.cweObjects['Weakness_Catalog']['Categories']['Category']
+    const cweCategories = objects.cweObjects['Weakness_Catalog']['Categories']['Category']
         .filter((e) => {
-            return categoryIds.includes(e['_attributes']['ID']);
+            return cweCategoryIds.includes(e['_attributes']['ID']);
         });
 
-    const memberIdsByCategory = {};
-    categories
+    const cweMemberIdsByCategory = {};
+    cweCategories
         .forEach((c) => {
             if (!c['Relationships']) {
                 return;
             }
 
-            if (!(memberIdsByCategory[c['_attributes']['ID']] instanceof Array)) {
-                memberIdsByCategory[c['_attributes']['ID']] = [];
+            if (!(cweMemberIdsByCategory[c['_attributes']['ID']] instanceof Array)) {
+                cweMemberIdsByCategory[c['_attributes']['ID']] = [];
             }
 
             const members = c['Relationships']['Has_Member'];
             if (members instanceof Array) {
                 members
-                    .map((e) => {
-                        memberIdsByCategory[c['_attributes']['ID']].push(e['_attributes']['CWE_ID']);
+                    .forEach((e) => {
+                        cweMemberIdsByCategory[c['_attributes']['ID']].push(e['_attributes']['CWE_ID']);
                     });
             } else {
-                memberIdsByCategory[c['_attributes']['ID']].push(members['_attributes']['CWE_ID']);
+                cweMemberIdsByCategory[c['_attributes']['ID']].push(members['_attributes']['CWE_ID']);
             }
         });
-    const categoryMembers = objects.cweObjects['Weakness_Catalog']['Weaknesses']['Weakness']
+    const cweObjectsFiltered = objects.cweObjects['Weakness_Catalog']['Weaknesses']['Weakness']
         .filter((e) => {
-            for (let categoryId in memberIdsByCategory) {
-                if (memberIdsByCategory[categoryId].includes(e['_attributes']['ID'])) {
+            for (let categoryId in cweMemberIdsByCategory) {
+                if (cweMemberIdsByCategory[categoryId].includes(e['_attributes']['ID'])) {
                     return true;
                 }
             }
@@ -61,19 +61,49 @@ function byOwaspTop10(objects) {
             return false;
         });
 
-    objects.cweObjectsFiltered = categoryMembers;
+    objects.cweObjectsFiltered = cweObjectsFiltered;
 
     // Extract all attack patterns related to OWASP Top 10 weaknesses
+    const capecRelatedObjectIdsByWeakness = {};
+    objects.cweObjectsFiltered.forEach((c) => {
+        if (!c['Related_Attack_Patterns']) {
+            return;
+        }
 
-    // DEBUG
-    writeTempJson(categoryMembers);
-}
+        let weaknessId = c['_attributes']['ID'];
+        capecRelatedObjectIdsByWeakness[weaknessId] = [];
 
-// DEBUG
-function writeTempJson(v) {
-    console.log('// DEBUG Writing...');
-    fileHandler.setFileContent('test.json', JSON.stringify(v, null, 4));
-    console.log('// DEBUG Written.');
+        const members = c['Related_Attack_Patterns']['Related_Attack_Pattern'];
+        if (members instanceof Array) {
+            members
+                .forEach((e) => {
+                    capecRelatedObjectIdsByWeakness[weaknessId].push(e['_attributes']['CAPEC_ID']);
+                });
+        } else {
+            capecRelatedObjectIdsByWeakness[weaknessId].push(members['_attributes']['CAPEC_ID']);
+        }
+    });
+    const capecObjectsFiltered = objects.capecObjects['capec:Attack_Pattern_Catalog']['capec:Attack_Patterns']['capec:Attack_Pattern']
+        .filter((e) => {
+            for (let weaknessId in capecRelatedObjectIdsByWeakness) {
+                if (capecRelatedObjectIdsByWeakness[weaknessId].includes(e['_attributes']['ID'])) {
+                    return true;
+                }
+            }
+
+            return false;
+        });
+
+    objects.capecObjectsFiltered = capecObjectsFiltered;
+
+    if (process.env.NODE_ENV === 'development') {
+        const data = capecObjectsFiltered;
+        console.log(cweObjectsFiltered.length);
+        console.log(capecObjectsFiltered.length);
+        console.log('DEBUG Writing...');
+        fileHandler.setFileContent('test.json', JSON.stringify(data, null, 4));
+        console.log('DEBUG Written.');
+    }
 }
 
 module.exports = {
