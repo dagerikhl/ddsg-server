@@ -1,6 +1,13 @@
 const fileHandler = require('../file-handler');
 
 function filterByActiveFilters(objects, activeFilters) {
+    // Set filtered objects to all objects if no filter is active
+    if (!activeFilters || activeFilters.length === 0) {
+        objects.capecObjectsFiltered = objects.capecObjects;
+        objects.cweObjectsFiltered = objects.cweObjects;
+        return;
+    }
+
     for (let filter of activeFilters) {
         switch (filter.toLowerCase()) {
         case 'owasp':
