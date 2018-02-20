@@ -104,13 +104,14 @@ function byOwaspTop10(objects) {
     objects.capecObjectsFiltered = capecObjectsFiltered;
 
     if (process.env.NODE_ENV === 'development') {
-        const data = capecObjectsFiltered;
-        console.log(cweObjectsFiltered.length);
-        console.log(capecObjectsFiltered.length);
-        console.log('DEBUG Writing...');
-        fileHandler.setFileContent('test.json', JSON.stringify(data, null, 4));
-        console.log('DEBUG Written.');
+        writeTestOutputToFile(capecObjectsFiltered);
     }
+}
+
+function writeTestOutputToFile(data) {
+    console.log('DEBUG Writing...');
+    fileHandler.setFileContent('filterTest.json', JSON.stringify(data, null, 4));
+    console.log('DEBUG Written.');
 }
 
 module.exports = {
