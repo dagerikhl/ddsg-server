@@ -1,6 +1,6 @@
 const fileHandler = require('../file-handler');
 
-const dataFetcher = require('./data-fetcher');
+const sourceFetcher = require('./source-fetcher');
 const entitiesGenerator = require('./entities-generator');
 const filterer = require('./filterer');
 const versionScraper = require('./version-scraper');
@@ -22,7 +22,7 @@ function fetchUpdatedDataFromSources() {
 
     // Fetch CAPEC source
     versionScraper.getNewestVersionOfSource('capec', (version) => {
-        dataFetcher.fetchCapecData(version, (data) => {
+        sourceFetcher.fetchCapecData(version, (data) => {
             objects.capecObjects = data;
 
             if (process.env.LOCAL_JSON_STORE === 'true') {
@@ -35,7 +35,7 @@ function fetchUpdatedDataFromSources() {
 
     // Fetch CWE source
     versionScraper.getNewestVersionOfSource('cwe', (version) => {
-        dataFetcher.fetchCweData(version, (data) => {
+        sourceFetcher.fetchCweData(version, (data) => {
             objects.cweObjects = data;
 
             if (process.env.LOCAL_JSON_STORE === 'true') {
