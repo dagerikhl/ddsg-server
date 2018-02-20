@@ -8,6 +8,7 @@ const versionScraper = require('./version-scraper');
 
 // Local configuration
 const activeFilters = [
+    'deprecated',
     'owasp'
 ];
 

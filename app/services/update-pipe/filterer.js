@@ -1,15 +1,15 @@
 const fileHandler = require('../file-handler');
 
 function filterByActiveFilters(objects, activeFilters) {
-    // Set filtered objects to all objects if no filter is active
-    if (!activeFilters || activeFilters.length === 0) {
-        objects.capecObjectsFiltered = objects.capecObjects;
-        objects.cweObjectsFiltered = objects.cweObjects;
-        return;
-    }
+    // Set filtered objects to all objects initially
+    objects.capecObjectsFiltered = objects.capecObjects;
+    objects.cweObjectsFiltered = objects.cweObjects;
 
     for (let filter of activeFilters) {
         switch (filter.toLowerCase()) {
+        case 'deprecated':
+            byDeprecated(objects);
+            break;
         case 'owasp':
             byOwaspTop10(objects);
             break;
@@ -20,9 +20,23 @@ function filterByActiveFilters(objects, activeFilters) {
     }
 }
 
+function byDeprecated(objects) {
+    const capecAttackPatternObjectsFiltered = objects.capecObjectsFiltered['capec:Attack_Pattern_Catalog']['capec:Attack_Patterns']['capec:Attack_Pattern']
+        .filter((e) => {
+            return e['_attributes']['Status'].toLowerCase() !== 'deprecated';
+        });
+    objects.capecObjectsFiltered['capec:Attack_Pattern_Catalog']['capec:Attack_Patterns']['capec:Attack_Pattern'] = capecAttackPatternObjectsFiltered;
+
+    const cweWeaknessObjectsFiltered = objects.cweObjectsFiltered['Weakness_Catalog']['Weaknesses']['Weakness']
+        .filter((e) => {
+            return e['_attributes']['Status'].toLowerCase() !== 'deprecated';
+        });
+    objects.cweObjectsFiltered['Weakness_Catalog']['Weaknesses']['Weakness'] = cweWeaknessObjectsFiltered;
+}
+
 function byOwaspTop10(objects) {
     // Extract all direct members (classes, bases, and variants) of OWASP Top 10 categories listed in OWASP Top 10 view
-    const cweView = objects.cweObjects['Weakness_Catalog']['Views']['View']
+    const cweView = objects.cweObjectsFiltered['Weakness_Catalog']['Views']['View']
         .filter((e) => {
             return e['_attributes']['ID'] === '928';
         })[0];
@@ -31,7 +45,7 @@ function byOwaspTop10(objects) {
         .map((e) => {
             return e['_attributes']['CWE_ID'];
         });
-    const cweCategories = objects.cweObjects['Weakness_Catalog']['Categories']['Category']
+    const cweCategories = objects.cweObjectsFiltered['Weakness_Catalog']['Categories']['Category']
         .filter((e) => {
             return cweCategoryIds.includes(e['_attributes']['ID']);
         });
@@ -57,7 +71,7 @@ function byOwaspTop10(objects) {
                 cweMemberIdsByCategory[c['_attributes']['ID']].push(members['_attributes']['CWE_ID']);
             }
         });
-    const cweObjectsFiltered = objects.cweObjects['Weakness_Catalog']['Weaknesses']['Weakness']
+    const cweObjectsFiltered = objects.cweObjectsFiltered['Weakness_Catalog']['Weaknesses']['Weakness']
         .filter((e) => {
             for (let categoryId in cweMemberIdsByCategory) {
                 if (cweMemberIdsByCategory[categoryId].includes(e['_attributes']['ID'])) {
@@ -90,7 +104,7 @@ function byOwaspTop10(objects) {
             capecRelatedObjectIdsByWeakness[weaknessId].push(members['_attributes']['CAPEC_ID']);
         }
     });
-    const capecObjectsFiltered = objects.capecObjects['capec:Attack_Pattern_Catalog']['capec:Attack_Patterns']['capec:Attack_Pattern']
+    const capecObjectsFiltered = objects.capecObjectsFiltered['capec:Attack_Pattern_Catalog']['capec:Attack_Patterns']['capec:Attack_Pattern']
         .filter((e) => {
             for (let weaknessId in capecRelatedObjectIdsByWeakness) {
                 if (capecRelatedObjectIdsByWeakness[weaknessId].includes(e['_attributes']['ID'])) {
