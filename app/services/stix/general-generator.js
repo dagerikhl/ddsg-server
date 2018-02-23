@@ -12,13 +12,7 @@ function createEntity(type) {
     };
 }
 
-/**
- * Due to CAPEC's complex description structure, this is not 100 % robust, and may not preserve order as it should.
- *
- * @param description The description array to be populated.
- * @param element The element to be recursively parsed for data.
- * @returns {Array | string} The description array populated with all recursively parsed members.
- */
+// TODO Due to CAPEC's complex description structure, this is not 100 % robust, and may not preserve order properly
 function buildRecursiveCapecDescription(description, element) {
     if (typeof element === 'string') {
         return element;
@@ -53,7 +47,24 @@ function buildRecursiveCapecDescription(description, element) {
     return description;
 }
 
+function buildRecursiveCapecText(text, element) {
+    if (typeof element === 'string') {
+        return element;
+    } else if (element['_text']) {
+        return text.concat(buildRecursiveCapecDescription(text, element['_text']));
+    } else if (element['capec:Text'] instanceof Array) {
+        return text.concat(...element['capec:Text'].map((c) => {
+            return text.concat(buildRecursiveCapecDescription(text, c));
+        }));
+    } else if (element['capec:Text']) {
+        return text.concat(buildRecursiveCapecDescription(text, element['capec:Text']));
+    }
+
+    return text;
+}
+
 module.exports = {
     createEntity,
-    buildRecursiveCapecDescription
+    buildRecursiveCapecDescription,
+    buildRecursiveCapecText
 };
