@@ -32,7 +32,7 @@ function fetchUpdatedDataFromSources() {
                 fileHandler.setFileContent('capecObjects.json', JSON.stringify(data, null, 4));
             }
 
-            filterAndGenerateEntities();
+            filterAndGenEntities();
         });
     });
 
@@ -45,19 +45,19 @@ function fetchUpdatedDataFromSources() {
                 fileHandler.setFileContent('cweObjects.json', JSON.stringify(data, null, 4));
             }
 
-            filterAndGenerateEntities();
+            filterAndGenEntities();
         });
     });
 }
 
-function filterAndGenerateEntities() {
+function filterAndGenEntities() {
     // Only proceed when we have fetched all sources
     if (!objects.capecObjects || !objects.cweObjects) {
         return;
     }
 
     filterer.filterByActiveFilters(objects, activeFilters);
-    entitiesGenerator.generateStixEntities(objects, saveEntities);
+    entitiesGenerator.genStixEntities(objects, saveEntities);
 }
 
 function saveEntities(entities) {

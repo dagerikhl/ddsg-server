@@ -1,6 +1,6 @@
 const utilities = require('../utilities');
 
-const stixGeneral = require('./general-generator');
+const stixGeneralGen = require('./general-generator');
 
 let capecObject = null;
 
@@ -29,7 +29,7 @@ function genName() {
 }
 
 function genDescription() {
-    return stixGeneral.buildRecursiveCapecDescription([], capecObject['capec:Description']);
+    return stixGeneralGen.buildRecursiveCapecDescription([], capecObject['capec:Description']);
 }
 
 function genExternalReferences() {

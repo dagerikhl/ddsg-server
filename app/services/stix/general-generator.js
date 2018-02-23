@@ -3,7 +3,7 @@
  *
  * @param description The description array to be populated.
  * @param element The element to be recursively parsed for data.
- * @returns {Array, string} The description array populated with all recursively parsed members.
+ * @returns {Array | string} The description array populated with all recursively parsed members.
  */
 function buildRecursiveCapecDescription(description, element) {
     if (typeof element === 'string') {
