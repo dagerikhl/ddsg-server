@@ -118,9 +118,6 @@ function genCourseOfActionFrom(id, capecObjectMitigation) {
     courseOfAction.description = stixCourseOfActionGen.genMitigationText();
     courseOfAction.external_references = stixCourseOfActionGen.genExternalReferences(id);
 
-    // Custom properties outside of STIX
-    courseOfAction.custom = {};
-
     stixCourseOfActionGen.clear();
     return courseOfAction;
 }

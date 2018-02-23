@@ -47,17 +47,24 @@ function buildRecursiveCapecDescription(description, element) {
     return description;
 }
 
-function buildRecursiveCapecText(text, element) {
+// TODO Due to CAPEC's complex description structure, this is not 100 % robust, and may not preserve order properly
+function buildRecursiveCapecMitigationText(text, element) {
     if (typeof element === 'string') {
         return element;
     } else if (element['_text']) {
-        return text.concat(buildRecursiveCapecDescription(text, element['_text']));
+        return text.concat(buildRecursiveCapecMitigationText(text, element['_text']));
     } else if (element['capec:Text'] instanceof Array) {
         return text.concat(...element['capec:Text'].map((c) => {
-            return text.concat(buildRecursiveCapecDescription(text, c));
+            return text.concat(buildRecursiveCapecMitigationText(text, c));
         }));
     } else if (element['capec:Text']) {
-        return text.concat(buildRecursiveCapecDescription(text, element['capec:Text']));
+        return text.concat(buildRecursiveCapecMitigationText(text, element['capec:Text']));
+    } else if (element['capec:Solution_or_Mitigation'] instanceof Array) {
+        return text.concat(...element['capec:Solution_or_Mitigation'].map((c) => {
+            return text.concat(buildRecursiveCapecMitigationText(text, c));
+        }));
+    } else if (element['capec:Solution_or_Mitigation']) {
+        return text.concat(buildRecursiveCapecMitigationText(text, element['capec:Solution_or_Mitigation']));
     }
 
     return text;
@@ -66,5 +73,5 @@ function buildRecursiveCapecText(text, element) {
 module.exports = {
     createEntity,
     buildRecursiveCapecDescription,
-    buildRecursiveCapecText
+    buildRecursiveCapecMitigationText
 };

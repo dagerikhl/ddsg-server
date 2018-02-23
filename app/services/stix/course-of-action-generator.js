@@ -11,7 +11,7 @@ function clear() {
 }
 
 function genMitigationText() {
-    return stixGeneralGen.buildRecursiveCapecText([], mitigationObject);
+    return stixGeneralGen.buildRecursiveCapecMitigationText([], mitigationObject);
 }
 
 function genExternalReferences(id) {
