@@ -6,16 +6,14 @@ function filterByActiveFilters(objects, activeFilters) {
     objects.cweObjectsFiltered = objects.cweObjects;
 
     for (let filter of activeFilters) {
-        switch (filter.toLowerCase()) {
-        case 'deprecated':
+        if (filter.toLowerCase() === 'deprecated') {
             byDeprecated(objects);
-            break;
-        case 'owasp':
+        } else if (filter.match(/capec:\d+/)) {
+            byCapecId(objects, filter.split(':')[1]);
+        } else if (filter.toLowerCase() === 'owasp') {
             byOwaspTop10(objects);
-            break;
-        default:
+        } else {
             console.log('No filter was found for active filter:', filter);
-            break;
         }
     }
 }
@@ -32,6 +30,14 @@ function byDeprecated(objects) {
             return e['_attributes']['Status'].toLowerCase() !== 'deprecated';
         });
     objects.cweObjectsFiltered['Weakness_Catalog']['Weaknesses']['Weakness'] = cweWeaknessObjectsFiltered;
+}
+
+function byCapecId(objects, id) {
+    const capecAttackPatternObjectsFiltered = objects.capecObjectsFiltered['capec:Attack_Pattern_Catalog']['capec:Attack_Patterns']['capec:Attack_Pattern']
+        .filter((e) => {
+            return e['_attributes']['ID'] === id;
+        });
+    objects.capecObjectsFiltered['capec:Attack_Pattern_Catalog']['capec:Attack_Patterns']['capec:Attack_Pattern'] = capecAttackPatternObjectsFiltered;
 }
 
 function byOwaspTop10(objects) {
