@@ -12,6 +12,14 @@ function createEntity(type) {
     };
 }
 
+function genMitreExternalReferences(source, id) {
+    return [{
+        source_name: `${source.toLowerCase()}`,
+        id: `${source.toUpperCase()}-${id}`,
+        url: `https://${source}.mitre.org/data/definitions/${id}.html`
+    }];
+}
+
 // TODO Due to CAPEC's complex description structure, this is not 100 % robust, and may not preserve order properly
 function buildRecursiveCapecDescription(description, element) {
     if (typeof element === 'string') {
@@ -72,6 +80,7 @@ function buildRecursiveCapecMitigationText(text, element) {
 
 module.exports = {
     createEntity,
+    genMitreExternalReferences,
     buildRecursiveCapecDescription,
     buildRecursiveCapecMitigationText
 };

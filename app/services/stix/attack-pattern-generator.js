@@ -18,13 +18,6 @@ function genDescription() {
     return stixGeneralGen.buildRecursiveCapecDescription([], capecObject['capec:Description']);
 }
 
-function genExternalReferences() {
-    return [{
-        source_name: 'capec',
-        id: `CAPEC-${capecObject['_attributes']['ID']}`
-    }];
-}
-
 function genSeverity() {
     let severity = null;
 
@@ -100,7 +93,6 @@ module.exports = {
     clear,
     genName,
     genDescription,
-    genExternalReferences,
     genSeverity,
     genLikelihood,
     genInjectionVector,

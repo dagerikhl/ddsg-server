@@ -14,16 +14,8 @@ function genMitigationText() {
     return stixGeneralGen.buildRecursiveCapecMitigationText([], mitigationObject);
 }
 
-function genExternalReferences(id) {
-    return [{
-        source_name: 'capec',
-        id: `CAPEC-${id}`
-    }];
-}
-
 module.exports = {
     feed,
     clear,
-    genMitigationText,
-    genExternalReferences
+    genMitigationText
 };

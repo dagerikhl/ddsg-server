@@ -124,7 +124,7 @@ function byOwaspTop10(objects) {
     objects.capecObjectsFiltered = capecObjectsFiltered;
 
     if (process.env.NODE_ENV === 'development') {
-        writeTestOutputToFile(capecObjectsFiltered);
+        writeTestOutputToFile(cweObjectsFiltered);
     }
 }
 
