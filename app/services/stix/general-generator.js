@@ -1,3 +1,17 @@
+const utilities = require('../utilities');
+
+function createEntity(type) {
+    const uuid = utilities.uuid();
+    const timestamp = utilities.timestamp();
+
+    return {
+        type: `${type}`,
+        id: `${type}--${uuid}`,
+        created: timestamp,
+        modified: timestamp
+    };
+}
+
 /**
  * Due to CAPEC's complex description structure, this is not 100 % robust, and may not preserve order as it should.
  *
@@ -40,5 +54,6 @@ function buildRecursiveCapecDescription(description, element) {
 }
 
 module.exports = {
+    createEntity,
     buildRecursiveCapecDescription
 };

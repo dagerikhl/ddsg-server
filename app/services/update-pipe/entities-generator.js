@@ -1,4 +1,5 @@
 const fileHandler = require('../file-handler');
+const stixGeneralGen = require('../stix/general-generator');
 const stixAttackPatternGen = require('../stix/attack-pattern-generator');
 
 /**
@@ -60,7 +61,7 @@ function genAttackPatternsAndCourseOfActions(objects) {
 function genAttackPatternFrom(capecObject) {
     stixAttackPatternGen.feed(capecObject);
 
-    const attackPattern = stixAttackPatternGen.createEntity('attack-pattern');
+    const attackPattern = stixGeneralGen.createEntity('attack-pattern');
 
     // Generated standard STIX properties
     attackPattern.name = stixAttackPatternGen.genName();

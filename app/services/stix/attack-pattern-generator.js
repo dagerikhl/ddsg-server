@@ -1,5 +1,3 @@
-const utilities = require('../utilities');
-
 const stixGeneralGen = require('./general-generator');
 
 let capecObject = null;
@@ -10,18 +8,6 @@ function feed(feedObject) {
 
 function clear() {
     capecObject = null;
-}
-
-function createEntity(type) {
-    const uuid = utilities.uuid();
-    const timestamp = utilities.timestamp();
-
-    return {
-        type: `${type}`,
-        id: `${type}--${uuid}`,
-        created: timestamp,
-        modified: timestamp
-    };
 }
 
 function genName() {
@@ -112,7 +98,6 @@ function genCia() {
 module.exports = {
     feed,
     clear,
-    createEntity,
     genName,
     genDescription,
     genExternalReferences,
