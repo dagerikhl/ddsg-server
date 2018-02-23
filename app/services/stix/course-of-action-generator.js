@@ -1,5 +1,6 @@
 const stixGeneralGen = require('./general-generator');
 
+// Local state
 let mitigationObject = null;
 
 function feed(feedObject) {

@@ -136,15 +136,15 @@ function genWeaknessFrom(cweObject) {
     const weakness = stixGeneralGen.createEntity('weakness');
 
     // Generated standard STIX properties
-    // weakness.name = stixWeaknessGen.genName();
-    // weakness.description = stixWeaknessGen.genDescription();
+    weakness.name = stixWeaknessGen.genName();
+    weakness.description = stixWeaknessGen.genDescription();
     weakness.external_references = stixGeneralGen.genMitreExternalReferences('cwe', id);
 
     // Custom properties outside of STIX
     weakness.custom = {
-        // extended_description: stixWeaknessGen.genExtendedDescription(),
-        // likelihood: stixWeaknessGen.genLikelihood(),
-        // consequences: stixWeaknessGen.genConsequences()
+        extended_description: stixWeaknessGen.genExtendedDescription(),
+        likelihood: stixWeaknessGen.genLikelihood(),
+        consequences: stixWeaknessGen.genConsequences()
     };
 
     if (process.env.NODE_ENV === 'development') {
@@ -155,6 +155,7 @@ function genWeaknessFrom(cweObject) {
     return weakness;
 }
 
+// FIXME
 function genRelationships(objects, SDOs) {
 }
 

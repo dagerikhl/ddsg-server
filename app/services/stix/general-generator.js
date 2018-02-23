@@ -55,7 +55,6 @@ function buildRecursiveCapecDescription(description, element) {
     return description;
 }
 
-// TODO Due to CAPEC's complex description structure, this is not 100 % robust, and may not preserve order properly
 function buildRecursiveCapecMitigationText(text, element) {
     if (typeof element === 'string') {
         return element;
@@ -78,9 +77,15 @@ function buildRecursiveCapecMitigationText(text, element) {
     return text;
 }
 
+// FIXME
+function buildRecursiveCweDescription(description, element) {
+    return element;
+}
+
 module.exports = {
     createEntity,
     genMitreExternalReferences,
     buildRecursiveCapecDescription,
-    buildRecursiveCapecMitigationText
+    buildRecursiveCapecMitigationText,
+    buildRecursiveCweDescription
 };
