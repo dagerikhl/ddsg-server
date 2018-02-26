@@ -34,8 +34,27 @@ function genLikelihood() {
     return likelihood;
 }
 
-// FIXME
 function genConsequences() {
+    const consequencesObjects = cweObject['Common_Consequences']['Consequence'];
+
+    if (consequencesObjects instanceof Array) {
+        return consequencesObjects.map((e) => {
+            return genConsequence(e);
+        });
+    } else if (consequencesObjects) {
+        return [genConsequence(consequencesObjects)];
+    }
+
+    return null;
+}
+
+function genConsequence(consequenceObject) {
+    return {
+        scope: stixGeneralGen.buildRecursiveText([], consequenceObject['Scope']),
+        impact: stixGeneralGen.buildRecursiveText([], consequenceObject['Impact']),
+        note: stixGeneralGen.buildRecursiveText([], consequenceObject['Note']),
+        likelihood: stixGeneralGen.buildRecursiveText([], consequenceObject['Likelihood'])
+    };
 }
 
 module.exports = {

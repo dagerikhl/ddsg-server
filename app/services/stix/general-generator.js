@@ -22,26 +22,32 @@ function genMitreExternalReferences(source, id) {
     ];
 }
 
-// Due to CAPEC and CWE's complex text structure, this is not 100 % robust, and may not preserve order or lists properly
-function buildRecursiveText(text, element) {
+/*
+ * TODO This may need to be reworked to preserve ordering of elements in text structures
+ *
+ * This is difficult to do due to CAPEC and CWE's complex text structure. It is not 100 % robust, and may not preserve
+ * order of elements, meaning placement of codeblocks or lists, properly. This is due to CAPEC and CWE using a form of
+ * breadth-first expansion of the nodes. But they do not use a trivial implementation.
+ */
+function buildRecursiveText(textArray, element) {
     if (typeof element === 'string') {
         return element;
     } else if (element instanceof Array) {
-        return text.concat(...element
+        return textArray.concat(...element
             .map((c) => {
-                return text.concat(buildRecursiveText(text, c));
+                return textArray.concat(buildRecursiveText(textArray, c));
             }));
     } else if (element && typeof element === 'object') {
-        return text.concat(...Object.keys(element)
+        return textArray.concat(...Object.keys(element)
             .filter((c) => {
                 return c !== '_attributes';
             })
             .map((c) => {
-                return text.concat(buildRecursiveText(text, element[c]));
+                return textArray.concat(buildRecursiveText(textArray, element[c]));
             }));
     }
 
-    return text;
+    return textArray.length === 0 ? null : textArray;
 }
 
 module.exports = {
