@@ -16,12 +16,10 @@ function genName() {
 }
 
 function genDescription() {
-    // return stixGeneralGen.buildRecursiveCweText([], { 'Description': cweObject['Description'] }, 'Description');
     return stixGeneralGen.buildRecursiveText([], cweObject['Description']);
 }
 
 function genExtendedDescription() {
-    // return stixGeneralGen.buildRecursiveCweText([], { 'Extended_Description': cweObject['Extended_Description'] }, 'Extended_Description');
     return stixGeneralGen.buildRecursiveText([], cweObject['Extended_Description']);
 }
 
