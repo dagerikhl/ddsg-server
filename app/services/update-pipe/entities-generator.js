@@ -1,7 +1,9 @@
 const fileHandler = require('../file-handler');
-const stixGeneralGen = require('../stix/general-generator');
+
 const stixAttackPatternGen = require('../stix/attack-pattern-generator');
 const stixCourseOfActionGen = require('../stix/course-of-action-generator');
+const stixGeneralGen = require('../stix/general-generator');
+const stixRelationshipGen = require('../stix/relationship-generator');
 const stixWeaknessGen = require('../stix/weakness-generator');
 
 /**
@@ -15,7 +17,7 @@ const stixWeaknessGen = require('../stix/weakness-generator');
  * 1. Attack Pattern: Represents an attack pattern as fetched from CAPEC.
  * 2. Course of Action: Represents a potential mitigation of an attack pattern.
  *
- * In addition, these custom Data Objects (DOs) will be included:
+ * In addition, these custom data objects outisde the STIX standard will be included:
  * 3. Weakness: Represents a weakness as fetched from CWE.
  *
  * And the relevant STIX Relationship Objects (SROs) created by this method are:
@@ -28,8 +30,8 @@ function genStixEntities(objects, cb) {
     const [attackPatterns, courseOfActions] = genAttackPatternsAndCourseOfActions(objects);
     const weaknesses = genWeaknesses(objects);
     const SDOs = {
-        attackPatterns,
-        courseOfActions,
+        attack_patterns: attackPatterns,
+        course_of_actions: courseOfActions,
         weaknesses
     };
 
@@ -155,8 +157,27 @@ function genWeaknessFrom(cweObject) {
     return weakness;
 }
 
-// FIXME
 function genRelationships(objects, SDOs) {
+    let relationships = [];
+
+    // Course of Actions mitigates Attack Patterns
+    for (let attackPattern of SDOs.attack_patterns) {
+        let courseOfActions = SDOs.course_of_actions.filter((e) => {
+            return e.external_references[0].id === attackPattern.external_references[0].id;
+        });
+        let mitigationRelationships = stixRelationshipGen.genMitigationRelationships(attackPattern, courseOfActions);
+
+        relationships = relationships.concat(mitigationRelationships);
+    }
+
+    // Attack Patterns targets Weaknesses
+    for (let attackPattern of SDOs.attack_patterns) {
+        let targetRelationships = stixRelationshipGen.genTargetRelationships(attackPattern, SDOs.weaknesses, objects);
+
+        relationships = relationships.concat(targetRelationships);
+    }
+
+    return relationships;
 }
 
 function writeTestOutputToFile(data) {
