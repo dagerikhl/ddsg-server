@@ -16,7 +16,7 @@ function genName() {
 }
 
 function genDescription() {
-    return stixGeneralGen.buildRecursiveCapecDescription([], capecObject['capec:Description']);
+    return stixGeneralGen.buildRecursiveText([], capecObject['capec:Description']['capec:Summary']);
 }
 
 function genSeverity() {

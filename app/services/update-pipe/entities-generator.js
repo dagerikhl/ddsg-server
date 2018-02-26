@@ -25,11 +25,11 @@ const stixWeaknessGen = require('../stix/weakness-generator');
  * @param cb Used to relay the generated entities back to the calling function.
  */
 function genStixEntities(objects, cb) {
-    // const { attackPatterns, courseOfActions } = genAttackPatternsAndCourseOfActions(objects);
+    const { attackPatterns, courseOfActions } = genAttackPatternsAndCourseOfActions(objects);
     const weaknesses = genWeaknesses(objects);
     const SDOs = {
-        // attackPatterns,
-        // courseOfActions,
+        attackPatterns,
+        courseOfActions,
         weaknesses
     };
 

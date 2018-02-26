@@ -16,11 +16,13 @@ function genName() {
 }
 
 function genDescription() {
-    return stixGeneralGen.buildRecursiveCweDescription([], { 'Description': cweObject['Description'] });
+    // return stixGeneralGen.buildRecursiveCweText([], { 'Description': cweObject['Description'] }, 'Description');
+    return stixGeneralGen.buildRecursiveText([], cweObject['Description']);
 }
 
 function genExtendedDescription() {
-    return stixGeneralGen.buildRecursiveCweDescription([], { 'Extended_Description': cweObject['Extended_Description'] });
+    // return stixGeneralGen.buildRecursiveCweText([], { 'Extended_Description': cweObject['Extended_Description'] }, 'Extended_Description');
+    return stixGeneralGen.buildRecursiveText([], cweObject['Extended_Description']);
 }
 
 function genLikelihood() {

@@ -12,7 +12,7 @@ function clear() {
 }
 
 function genMitigationText() {
-    return stixGeneralGen.buildRecursiveCapecMitigationText([], mitigationObject);
+    return stixGeneralGen.buildRecursiveText([], mitigationObject);
 }
 
 module.exports = {

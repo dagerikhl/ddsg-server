@@ -13,79 +13,39 @@ function createEntity(type) {
 }
 
 function genMitreExternalReferences(source, id) {
-    return [{
-        source_name: `${source.toLowerCase()}`,
-        id: `${source.toUpperCase()}-${id}`,
-        url: `https://${source}.mitre.org/data/definitions/${id}.html`
-    }];
+    return [
+        {
+            source_name: `${source.toLowerCase()}`,
+            id: `${source.toUpperCase()}-${id}`,
+            url: `https://${source}.mitre.org/data/definitions/${id}.html`
+        }
+    ];
 }
 
-// TODO Due to CAPEC's complex description structure, this is not 100 % robust, and may not preserve order properly
-function buildRecursiveCapecDescription(description, element) {
+// Due to CAPEC and CWE's complex text structure, this is not 100 % robust, and may not preserve order or lists properly
+function buildRecursiveText(text, element) {
     if (typeof element === 'string') {
         return element;
-    } else if (element['_text']) {
-        return description.concat(buildRecursiveCapecDescription(description, element['_text']));
-    } else if (element['capec:Text'] instanceof Array) {
-        return description.concat(...element['capec:Text'].map((c) => {
-            return description.concat(buildRecursiveCapecDescription(description, c));
-        }));
-    } else if (element['capec:Text']) {
-        return description.concat(buildRecursiveCapecDescription(description, element['capec:Text']));
-    } else if (element['capec:Code'] instanceof Array) {
-        return description.concat(...element['capec:Code'].map((c) => {
-            return description.concat(buildRecursiveCapecDescription(description, c));
-        }));
-    } else if (element['capec:Code']) {
-        return description.concat(buildRecursiveCapecDescription(description, element['capec:Code']));
-    } else if (element['capec:Block'] && Object.keys(element['capec:Block']).length > 1) {
-        return description.concat(...Object.keys(element['capec:Block']).map((c) => {
-            return description.concat(buildRecursiveCapecDescription(description, { [c]: element['capec:Block'][c] }));
-        }));
-    } else if (element['capec:Block']) {
-        return description.concat(buildRecursiveCapecDescription(description, element['capec:Block']));
-    } else if (element['capec:Summary'] && Object.keys(element['capec:Summary']).length > 1) {
-        return description.concat(...Object.keys(element['capec:Summary']).map((c) => {
-            return description.concat(buildRecursiveCapecDescription(description, { [c]: element['capec:Summary'][c] }));
-        }));
-    } else if (element['capec:Summary']) {
-        return description.concat(buildRecursiveCapecDescription(description, element['capec:Summary']));
-    }
-
-    return description;
-}
-
-function buildRecursiveCapecMitigationText(text, element) {
-    if (typeof element === 'string') {
-        return element;
-    } else if (element['_text']) {
-        return text.concat(buildRecursiveCapecMitigationText(text, element['_text']));
-    } else if (element['capec:Text'] instanceof Array) {
-        return text.concat(...element['capec:Text'].map((c) => {
-            return text.concat(buildRecursiveCapecMitigationText(text, c));
-        }));
-    } else if (element['capec:Text']) {
-        return text.concat(buildRecursiveCapecMitigationText(text, element['capec:Text']));
-    } else if (element['capec:Solution_or_Mitigation'] instanceof Array) {
-        return text.concat(...element['capec:Solution_or_Mitigation'].map((c) => {
-            return text.concat(buildRecursiveCapecMitigationText(text, c));
-        }));
-    } else if (element['capec:Solution_or_Mitigation']) {
-        return text.concat(buildRecursiveCapecMitigationText(text, element['capec:Solution_or_Mitigation']));
+    } else if (element instanceof Array) {
+        return text.concat(...element
+            .map((c) => {
+                return text.concat(buildRecursiveText(text, c));
+            }));
+    } else if (element && typeof element === 'object') {
+        return text.concat(...Object.keys(element)
+            .filter((c) => {
+                return c !== '_attributes';
+            })
+            .map((c) => {
+                return text.concat(buildRecursiveText(text, element[c]));
+            }));
     }
 
     return text;
 }
 
-// FIXME
-function buildRecursiveCweDescription(description, element) {
-    return element;
-}
-
 module.exports = {
     createEntity,
     genMitreExternalReferences,
-    buildRecursiveCapecDescription,
-    buildRecursiveCapecMitigationText,
-    buildRecursiveCweDescription
+    buildRecursiveText
 };
