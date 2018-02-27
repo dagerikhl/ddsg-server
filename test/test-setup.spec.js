@@ -1,9 +1,10 @@
 const sinon = require('sinon');
 
-beforeEach(() => {
+
+beforeEach(function () {
     this.sandbox = sinon.sandbox.create();
 });
 
-afterEach(() => {
+afterEach(function () {
     this.sandbox.restore();
 });
