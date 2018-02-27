@@ -8,9 +8,9 @@
         "dev": "cross-env NODE_ENV=development nodemon server.js",
         "test": "npm run test-unit && npm run test-cover",
         "test:w": "npm run test-unit:w",
-        "test-unit": "cross-env NODE_ENV=test mocha ./app/**/*.spec.js",
-        "test-unit:w": "cross-env NODE_ENV=test mocha -w ./app/**/*.spec.js",
-        "test-cover": "nyc report",
+        "test-unit": "cross-env NODE_ENV=test mocha -c ./app/**/*.spec.js",
+        "test-unit:w": "cross-env NODE_ENV=test mocha -c -w ./app/**/*.spec.js",
+        "test-cover": "nyc report --color",
         "test-cover:html": "nyc report --reporter=html"
     },
     "repository": {
