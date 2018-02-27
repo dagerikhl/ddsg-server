@@ -6,9 +6,11 @@
     "scripts": {
         "start": "node server.js",
         "dev": "cross-env NODE_ENV=development nodemon server.js",
-        "test": "npm run test-uni",
-        "test-unit": "cross-env NODE_ENV=test mocha '/**/*.spec.js'",
-        "test-cover": "istanbul cover _mocha $(find ./app -name \"*.spec.js\" -not -path \"./node_modules/*\")"
+        "test": "npm run test-unit",
+        "test:w": "npm run test-unit:w",
+        "test-unit": "cross-env NODE_ENV=test mocha ./app/**/*.spec.js",
+        "test-unit:w": "cross-env NODE_ENV=test mocha -w ./app/**/*.spec.js",
+        "test-cover": "istanbul cover node_modules/mocha/bin/_mocha ./app/**/*.spec.js"
     },
     "repository": {
         "type": "git",
