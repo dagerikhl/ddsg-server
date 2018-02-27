@@ -1,5 +1,3 @@
-const fileHandler = require('../file-handler');
-
 function filterByActiveFilters(objects, activeFilters) {
     // Set filtered objects to all objects initially
     objects.capecObjectsFiltered = objects.capecObjects;
@@ -13,7 +11,7 @@ function filterByActiveFilters(objects, activeFilters) {
         } else if (filter.toLowerCase() === 'owasp') {
             byOwaspTop10(objects);
         } else {
-            console.log('No filter was found for active filter:', filter);
+            logger.warn('No filter was found for active filter:', filter);
         }
     }
 }
@@ -123,15 +121,11 @@ function byOwaspTop10(objects) {
 
     objects.capecObjectsFiltered = capecObjectsFiltered;
 
-    if (process.env.NODE_ENV === 'development') {
-        writeTestOutputToFile(cweObjectsFiltered);
-    }
-}
-
-function writeTestOutputToFile(data) {
-    console.log('DEBUG Writing...');
-    fileHandler.setFileContent('filterTest.json', JSON.stringify(data, null, 4));
-    console.log('DEBUG Written.');
+    // if (process.env.NODE_ENV === 'development') {
+    //     logger.debug('Writing to file...');
+    //     fileHandler.setFileContent('filterTest.json', JSON.stringify(data, null, 4));
+    //     logger.debug('Writing to file... Done.');
+    // }
 }
 
 module.exports = {

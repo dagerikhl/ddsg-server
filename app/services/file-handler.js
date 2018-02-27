@@ -18,7 +18,7 @@ function removeFile(fileName) {
     if (fs.existsSync(path.join(basePath, fileName))) {
         fs.unlink(path.join(basePath, fileName), (err) => {
             if (err) {
-                console.log(`Error removing file ${fileName}:`, err);
+                logger.error(`Error removing file ${fileName}:`, err);
             }
         });
     }

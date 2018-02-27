@@ -2,21 +2,21 @@ const axios = require('axios');
 
 function get(url, cb) {
     axios.get(url)
-        .then(response => {
-            cb(response.data);
+        .then(res => {
+            cb(res.data);
         })
-        .catch(error => {
-            console.log(error);
+        .catch(err => {
+            logger.error(err);
         });
 }
 
 function getBinary(url, cb) {
     axios.get(url, { responseType: 'arraybuffer' })
-        .then(response => {
-            cb(response.data);
+        .then(res => {
+            cb(res.data);
         })
-        .catch(error => {
-            console.log(error);
+        .catch(err => {
+            logger.error(err);
         });
 }
 

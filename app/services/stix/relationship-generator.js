@@ -30,7 +30,6 @@ function genTargetRelationships(attackPattern, allWeaknesses, objects) {
     const relationships = [];
     for (let relatedWeakness of relatedWeaknesses) {
         let weakness = allWeaknesses.filter((e) => {
-            // console.log(relatedWeakness);
             return e.external_references[0].id.split('-')[1] === relatedWeakness['capec:CWE_ID']['_text'];
         })[0];
 

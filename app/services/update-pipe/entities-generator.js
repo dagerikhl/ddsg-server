@@ -1,5 +1,3 @@
-const fileHandler = require('../file-handler');
-
 const stixAttackPatternGen = require('../stix/attack-pattern-generator');
 const stixCourseOfActionGen = require('../stix/course-of-action-generator');
 const stixGeneralGen = require('../stix/general-generator');
@@ -149,9 +147,11 @@ function genWeaknessFrom(cweObject) {
         consequences: stixWeaknessGen.genConsequences()
     };
 
-    if (process.env.NODE_ENV === 'development') {
-        writeTestOutputToFile(cweObject);
-    }
+    // if (process.env.NODE_ENV === 'development') {
+    //     logger.verbose('Writing to file...');
+    //     fileHandler.setFileContent('entitiesTest.json', JSON.stringify(data, null, 4));
+    //     logger.verbose('Writing to file... Done.');
+    // }
 
     stixWeaknessGen.clear();
     return weakness;
@@ -178,12 +178,6 @@ function genRelationships(objects, SDOs) {
     }
 
     return relationships;
-}
-
-function writeTestOutputToFile(data) {
-    console.log('DEBUG Writing...');
-    fileHandler.setFileContent('entitiesTest.json', JSON.stringify(data, null, 4));
-    console.log('DEBUG Written.');
 }
 
 module.exports = {

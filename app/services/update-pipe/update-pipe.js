@@ -21,7 +21,7 @@ let objects = {
 };
 
 function fetchUpdatedDataFromSources() {
-    console.log('Updating data from sources...');
+    logger.info('Updating data from sources...');
 
     // Fetch CAPEC source
     versionScraper.getNewestVersionOfSource('capec', (version) => {
@@ -77,7 +77,7 @@ function saveEntities(entities) {
     // Clear local state
     objects = {};
 
-    console.log('Done updating data from sources.');
+    logger.info('Updating data from sources... Done.');
 }
 
 module.exports = {

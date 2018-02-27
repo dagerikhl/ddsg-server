@@ -7,7 +7,7 @@ function getNewestVersionOfSource(source, cb) {
     case 'capec':
         xray('https://capec.mitre.org/data/index.html', '.header')((err, res) => {
             if (err) {
-                console.log(err);
+                logger.error(error);
             }
 
             const version = res.match(/(\d\.?)+/g)[0];
@@ -17,7 +17,7 @@ function getNewestVersionOfSource(source, cb) {
     case 'cwe':
         xray('https://cwe.mitre.org/data/index.html', '.header')((err, res) => {
             if (err) {
-                console.log(err);
+                logger.error(error);
             }
 
             const version = res.match(/(\d\.?)+/g)[0];
