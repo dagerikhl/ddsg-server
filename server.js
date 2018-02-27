@@ -23,6 +23,6 @@ if (process.env.NODE_ENV === 'development') {
     // Always update when developing
     updatePipe.fetchUpdatedDataFromSources();
 } else {
-    // Update entities on a schedule, CRON syntax: '0 0 * * *' = once a day at 00:00
-    schedule.scheduleJob('0 0 * * *', updatePipe.fetchUpdatedDataFromSources);
+    // Update entities on a schedule, CRON syntax: '0 30 * * *' = once a day at 00:30
+    schedule.scheduleJob('0 30 * * *', updatePipe.fetchUpdatedDataFromSources);
 }
