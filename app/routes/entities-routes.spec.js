@@ -51,5 +51,4 @@ describe('The entities routes module', function () {
 
         res.json.lastCall.args[0].should.be.eql(emptyResponseObject);
     });
-
 });
