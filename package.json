@@ -6,12 +6,12 @@
     "scripts": {
         "start": "node server.js",
         "dev": "cross-env NODE_ENV=development nodemon server.js",
-        "test": "npm run test-unit && npm run test-cover",
+        "test": "npm run test-unit",
         "test:w": "npm run test-unit:w",
         "test-unit": "cross-env NODE_ENV=test mocha -c ./test/**/*.spec.js ./app/**/*.spec.js",
         "test-unit:w": "cross-env NODE_ENV=test mocha -c -w ./test/**/*.spec.js ./app/**/*.spec.js",
-        "test-cover": "nyc report --color",
-        "test-cover:html": "nyc report --reporter=html"
+        "cover": "nyc npm test --color",
+        "cover:html": "nyc --reporter=html npm test"
     },
     "repository": {
         "type": "git",
