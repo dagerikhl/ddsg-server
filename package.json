@@ -10,7 +10,7 @@
         "test:w": "npm run test-unit:w",
         "test-unit": "cross-env NODE_ENV=test mocha -c ./test/**/*.spec.js ./app/**/*.spec.js",
         "test-unit:w": "cross-env NODE_ENV=test mocha -c -w ./test/**/*.spec.js ./app/**/*.spec.js",
-        "cover": "nyc npm test --color"
+        "coverage": "nyc npm test --color"
     },
     "repository": {
         "type": "git",
