@@ -4,45 +4,45 @@ const chai = require('chai');
 chai.should();
 
 describe('The entities routes module', function () {
-    // Arrange
-    const app = {
-        get: sinon.spy()
-    };
+    const emptyResponseString = '{}';
+    const emptyResponseObject = JSON.parse(emptyResponseString);
 
-    const req = {
+    let app = { get: null };
+
+    let req = {
         method: null,
         headers: {
             host: null
         },
         url: null
     };
-    const res = {
-        json: sinon.spy()
-    };
+    let res = { json: null };
 
-    const emptyResponseString = '{}';
-    const emptyResponseObject = JSON.parse(emptyResponseString);
+    beforeEach(function () {
+        app.get = sinon.spy();
 
-    require('./entities-routes')(app);
+        require('./entities-routes')(app);
+
+        res.json = sinon.spy();
+    });
+
+    it('should export exactly one route', function () {
+        app.get.calledOnce.should.be.true;
+    });
 
     it('should export the /entities route', function () {
-        // Assert
         app.get.calledWith('/entities').should.be.true;
     });
 
     it('should log a serving statement when requested', function () {
-        // Act
         app.get.callArgWith(1, req, res);
 
-        // Assert
         logger.info.calledWithMatch(/Serving.*/).should.be.true;
     });
 
-    it('should serve JSON response', function () {
-        // Act
+    it('should serve JSON response when requested', function () {
         app.get.callArgWith(1, req, res);
 
-        // Assert
         res.json.lastCall.args[0].should.be.eql(emptyResponseObject);
     });
 
