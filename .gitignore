@@ -20,7 +20,6 @@ lib-cov
 coverage
 
 ## nyc test coverage
-.nycrc
 .nyc_output
 
 ## Grunt intermediate storage (http://gruntjs.com/creating-plugins#storing-task-files)
