@@ -15,7 +15,7 @@ Server repository.
 
 ## Use
 
-**Note!** Requires some enviroment variables to be set. See section [Configuration](#configuration)
+**Note!** Requires some enviroment variables to be set. See section [Configuration](#configuration).
 
 ### Production
 
