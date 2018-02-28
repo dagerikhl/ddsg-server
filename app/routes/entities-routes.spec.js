@@ -3,12 +3,17 @@ const chai = require('chai');
 
 chai.should();
 
+const fileHandler = require('../services/file-handler');
+
 describe('The entities routes module', function () {
     let app;
     let req;
     let res;
 
     before(function () {
+        sinon.stub(fileHandler, 'getFileContent').returns('{}');
+        sinon.stub(fileHandler, 'setFileContent');
+
         app = { get: null };
 
         req = {
@@ -21,12 +26,16 @@ describe('The entities routes module', function () {
         res = { json: null };
     });
 
+    after(function () {
+        fileHandler.getFileContent.restore();
+        fileHandler.setFileContent.restore();
+    });
+
     beforeEach(function () {
         app.get = sinon.spy();
+        res.json = sinon.spy();
 
         require('./entities-routes')(app);
-
-        res.json = sinon.spy();
     });
 
     it('should export exactly one route', function () {

@@ -1,7 +1,5 @@
 const sinon = require('sinon');
 
-const fileHandler = require('../app/services/file-handler');
-
 require('../logger');
 
 beforeEach(function () {
@@ -13,9 +11,6 @@ beforeEach(function () {
     this.sandbox.spy(logger, 'verbose');
     this.sandbox.spy(logger, 'debug');
     this.sandbox.spy(logger, 'silly');
-
-    this.sandbox.stub(fileHandler, 'getFileContent').returns('{}');
-    this.sandbox.stub(fileHandler, 'setFileContent');
 });
 
 afterEach(function () {
