@@ -4,7 +4,8 @@
         "app/**/*.js"
     ],
     "exclude": [
-        "app/**/*.spec.js"
+        "app/**/*.spec.js",
+        "**/index.js"
     ],
     "extension": [
         "js"
