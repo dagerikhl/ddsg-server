@@ -1,7 +1,7 @@
 const uuidv4 = require('uuid/v4');
 
 function timestamp() {
-    return `${new Date(Date.now() || new Date().getTime()).toISOString()}`;
+    return `${new Date().toISOString()}`;
 }
 
 function uuid() {
