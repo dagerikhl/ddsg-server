@@ -4,19 +4,22 @@ const chai = require('chai');
 chai.should();
 
 describe('The entities routes module', function () {
-    const emptyResponseString = '{}';
-    const emptyResponseObject = JSON.parse(emptyResponseString);
+    let app;
+    let req;
+    let res;
 
-    let app = { get: null };
+    before(function () {
+        app = { get: null };
 
-    let req = {
-        method: null,
-        headers: {
-            host: null
-        },
-        url: null
-    };
-    let res = { json: null };
+        req = {
+            method: null,
+            headers: {
+                host: null
+            },
+            url: null
+        };
+        res = { json: null };
+    });
 
     beforeEach(function () {
         app.get = sinon.spy();
@@ -41,6 +44,9 @@ describe('The entities routes module', function () {
     });
 
     it('should serve JSON response when requested', function () {
+        const emptyResponseString = '{}';
+        const emptyResponseObject = JSON.parse(emptyResponseString);
+
         app.get.callArgWith(1, req, res);
 
         res.json.lastCall.args[0].should.be.eql(emptyResponseObject);
