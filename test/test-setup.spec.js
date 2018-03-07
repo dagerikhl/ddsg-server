@@ -1,5 +1,7 @@
 const sinon = require('sinon');
 
+require('../logger');
+
 beforeEach(function () {
     this.sandbox = sinon.sandbox.create();
 
