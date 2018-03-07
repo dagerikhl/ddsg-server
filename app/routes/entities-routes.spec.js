@@ -3,12 +3,12 @@ const chai = require('chai');
 
 chai.should();
 
-const fileHandler = require('../services/file-handler');
-
 describe('The entities routes module', function () {
     let app;
     let req;
     let res;
+
+    const fileHandler = require('../services/file-handler');
 
     before(function () {
         sinon.stub(fileHandler, 'getFileContent').returns('{}');
