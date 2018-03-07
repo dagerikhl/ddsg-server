@@ -3,7 +3,7 @@ const chai = require('chai');
 
 chai.should();
 
-describe('The entities routes module', function () {
+describe('The entities routes function module', function () {
     let app;
     let req;
     let res;
