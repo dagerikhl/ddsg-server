@@ -1,18 +1,26 @@
 const sinon = require('sinon');
 
-require('../logger');
-
 beforeEach(function () {
     this.sandbox = sinon.sandbox.create();
 
-    this.sandbox.spy(logger, 'error');
-    this.sandbox.spy(logger, 'warn');
-    this.sandbox.spy(logger, 'info');
-    this.sandbox.spy(logger, 'verbose');
-    this.sandbox.spy(logger, 'debug');
-    this.sandbox.spy(logger, 'silly');
+    this.sandbox.logger = {
+        error: sinon.stub(logger, 'error'),
+        warn: sinon.stub(logger, 'warn'),
+        info: sinon.stub(logger, 'info'),
+        verbose: sinon.stub(logger, 'verbose'),
+        debug: sinon.stub(logger, 'debug'),
+        silly: sinon.stub(logger, 'silly')
+    };
+
 });
 
 afterEach(function () {
     this.sandbox.restore();
+
+    logger.error.restore();
+    logger.warn.restore();
+    logger.info.restore();
+    logger.verbose.restore();
+    logger.debug.restore();
+    logger.silly.restore();
 });
