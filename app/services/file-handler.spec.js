@@ -32,16 +32,14 @@ describe('The file handler module', function () {
 
         let fileContent;
 
-        before(function () {
-            readFileStub = sinon.stub(fs, 'readFileSync').returns(contentString);
-        });
-
-        after(function () {
-            fs.readFileSync.restore();
-        });
-
         beforeEach(function () {
+            readFileStub = sinon.stub(fs, 'readFileSync').returns(contentString);
+
             fileContent = fileHandler.getFileContent(fileName);
+        });
+
+        afterEach(function () {
+            fs.readFileSync.restore();
         });
 
         it('should read from the correct file based on base path and file name', function () {
@@ -60,16 +58,14 @@ describe('The file handler module', function () {
     describe('#setFileContent()', function () {
         let writeFileSpy;
 
-        before(function () {
-            writeFileSpy = sinon.spy(fs, 'writeFileSync');
-        });
-
-        after(function () {
-            fs.writeFileSync.restore();
-        });
-
         beforeEach(function () {
+            writeFileSpy = sinon.spy(fs, 'writeFileSync');
+
             fileHandler.setFileContent(fileName, contentString);
+        });
+
+        afterEach(function () {
+            fs.writeFileSync.restore();
         });
 
         it('should write to the correct file based on base path and file name', function () {
@@ -83,63 +79,134 @@ describe('The file handler module', function () {
 
     describe('#removeFile()', function () {
         let existsStub;
-        let unlinkStub;
+        let unlinkSpy;
 
-        before(function () {
-            existsStub = sinon.stub(fs, 'existsSync').returns(true);
-            unlinkStub = sinon.stub(fs, 'unlink');
+        beforeEach(function () {
+            existsStub = sinon.stub(fs, 'existsSync');
+            unlinkSpy = sinon.spy(fs, 'unlink');
         });
 
-        after(function () {
+        afterEach(function () {
             fs.existsSync.restore();
             fs.unlink.restore();
         });
 
-        beforeEach(function () {
-            fileHandler.removeFile(fileName);
-        });
-
         it('should test that the file exists', function () {
+            fileHandler.removeFile(fileName);
+
             existsStub.called.should.be.true;
         });
 
         it('should test that the file exists before trying to remove the file', function () {
-            existsStub.lastCall.calledBefore(unlinkStub.lastCall).should.be.true;
+            existsStub.returns(true);
+
+            fileHandler.removeFile(fileName);
+
+            existsStub.lastCall.calledBefore(unlinkSpy.lastCall).should.be.true;
+        });
+
+        it('should not unlink the file if it does not exist', function () {
+            existsStub.returns(false);
+
+            fileHandler.removeFile(fileName);
+
+            unlinkSpy.callCount.should.be.eq(0);
         });
 
         it('should remove the correct file based on base path and file name', function () {
-            unlinkStub.lastCall.args[0].should.be.eq(correctPath);
+            existsStub.returns(true);
+
+            fileHandler.removeFile(fileName);
+
+            unlinkSpy.lastCall.args[0].should.be.eq(correctPath);
+        });
+
+        it('should log an error if the file does not exist', function () {
+            existsStub.returns(true);
+
+            fileHandler.removeFile('unknown file');
+
+            unlinkSpy.callArgOnWith(1, {}, 'an error');
+
+            logger.error.callCount.should.be.equal(1);
         });
     });
 
     describe('#extractEntryFromZipFile()', function () {
-        let readStreamSpy;
-        let writeStreamSpy;
+        let readStreamStub;
+        let writeStreamStub;
+
+        let onSpy;
+        let callbackSpy;
 
         let zipFileName;
         let correctZipPath;
-        let callbackSpy;
 
         before(function () {
-            readStreamSpy = sinon.spy(fs, 'createReadStream');
-            writeStreamSpy = sinon.spy(fs, 'createWriteStream');
-
             zipFileName = fileName.replace('.json', '.zip');
             correctZipPath = correctPath.replace('.json', '.zip');
+        });
+
+        beforeEach(function () {
+            readStreamStub = sinon.stub(fs, 'createReadStream');
+            readStreamStub.returns({
+                pipe: (destination) => {
+                    return {
+                        on: onSpy
+                    };
+                }
+            });
+            writeStreamStub = sinon.stub(fs, 'createWriteStream');
+            writeStreamStub.returns({
+                addListener: () => {
+                }
+            });
+
+            onSpy = sinon.spy();
             callbackSpy = sinon.spy();
         });
 
-        after(function () {
+        afterEach(function () {
             fs.createReadStream.restore();
             fs.createWriteStream.restore();
         });
 
-        beforeEach(function () {
+        it('should create a read stream to the correct zip file based on base path and file name', function () {
             fileHandler.extractEntryFromZipFile(zipFileName, fileName, callbackSpy);
+
+            readStreamStub.lastCall.args[0].should.be.eq(correctZipPath);
         });
 
-        it('should create a read stream to the correct zip file based on base path and file name', function () {
-            readStreamSpy.lastCall.args[0].should.be.eq(correctZipPath);
+        it('should pipe the entry from the zip file to the write stream', function () {
+            let entryPipeSpy = sinon.spy();
+
+            fileHandler.extractEntryFromZipFile(zipFileName, fileName, callbackSpy);
+
+            onSpy.callArgOnWith(1, {}, {
+                path: fileName,
+                pipe: entryPipeSpy,
+                autodrain: () => {
+                }
+            });
+            onSpy.lastCall.args[0].should.be.eq('entry');
+
+            entryPipeSpy.callCount.should.be.eq(1);
+        });
+
+        it('should drain the entry and not pipe the entry if the file name is incorrect', function () {
+            let entryAutodrainSpy = sinon.spy();
+
+            fileHandler.extractEntryFromZipFile(zipFileName, fileName, callbackSpy);
+
+            onSpy.callArgOnWith(1, {}, {
+                path: 'incorrect filename',
+                pipe: () => {
+                },
+                autodrain: entryAutodrainSpy
+            });
+            onSpy.lastCall.args[0].should.be.eq('entry');
+
+            entryAutodrainSpy.callCount.should.be.eq(1);
         });
     });
 });
