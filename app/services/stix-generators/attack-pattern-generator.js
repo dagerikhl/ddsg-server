@@ -92,8 +92,10 @@ function genIndicatorsWarningsOfAttack() {
         stixGeneralGen.buildJoinedRecursiveText);
 }
 
-// FIXME
 function genAttackMotivationConsequences() {
+    return extractTransformedFieldOnSelectors('capec:Attack_Motivation-Consequences',
+        'capec:Attack_Motivation-Consequence',
+        extractMotivation);
 }
 
 function genInjectionVector() {
@@ -213,6 +215,31 @@ function extractExample(exampleObject) {
     }
 
     return example;
+}
+
+function extractMotivation(motivationObject) {
+    let motivation = {
+        scope: null,
+        impact: null,
+        notes: null
+    };
+
+    motivation.scope =
+        motivationObject['capec:Consequence_Scope'] ?
+            stixGeneralGen.buildRecursiveText(motivationObject['capec:Consequence_Scope']) :
+            null;
+
+    motivation.impact =
+        motivationObject['capec:Consequence_Technical_Impact'] ?
+            stixGeneralGen.buildRecursiveText(motivationObject['capec:Consequence_Technical_Impact']) :
+            null;
+
+    motivation.notes =
+        motivationObject['capec:Consequence_Note'] ?
+            stixGeneralGen.buildRecursiveText(motivationObject['capec:Consequence_Note']) :
+            null;
+
+    return motivation;
 }
 
 function extractTransformedFieldOnSelectors(selector1, selector2, transform) {

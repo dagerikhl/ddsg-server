@@ -84,7 +84,7 @@ function genAttackPatternFrom(capecObject) {
         examples: stixAttackPatternGen.genExamplesInstances(),
         probing_techniques: stixAttackPatternGen.genProbingTechniques(),
         indicators: stixAttackPatternGen.genIndicatorsWarningsOfAttack(),
-        motivation: stixAttackPatternGen.genAttackMotivationConsequences(),
+        motivations: stixAttackPatternGen.genAttackMotivationConsequences(),
         injection_vector: stixAttackPatternGen.genInjectionVector(),
         payload: stixAttackPatternGen.genPayload(),
         activation_zone: stixAttackPatternGen.genActivationZone(),
