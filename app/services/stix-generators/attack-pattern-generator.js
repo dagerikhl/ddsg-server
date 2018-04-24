@@ -49,18 +49,9 @@ function genAttackSteps() {
 }
 
 function genAttackPrerequisites() {
-    const prerequisitesObject = capecObject['capec:Attack_Prerequisites'];
-    if (prerequisitesObject) {
-        let prerequisitesArrayOrObject = prerequisitesObject['capec:Attack_Prerequisite'];
-        if (prerequisitesArrayOrObject instanceof Array) {
-            return prerequisitesArrayOrObject
-                .map((prerequisite) => stixGeneralGen.buildJoinedRecursiveText(prerequisite));
-        } else if (prerequisitesArrayOrObject && typeof prerequisitesArrayOrObject === 'object') {
-            return stixGeneralGen.buildRecursiveText(prerequisitesArrayOrObject);
-        }
-    }
-
-    return null;
+    return extractTransformedFieldOnSelectors('capec:Attack_Prerequisites',
+        'capec:Attack_Prerequisite',
+        stixGeneralGen.buildJoinedRecursiveText);
 }
 
 function genTypicalSeverity() {
@@ -86,36 +77,19 @@ function genTypicalLikelihoodOfExploit() {
 }
 
 function genExamplesInstances() {
-    const examplesObject = capecObject['capec:Examples-Instances'];
-    if (examplesObject) {
-        const examplesArrayOrObject = examplesObject['capec:Example-Instance'];
-        if (examplesArrayOrObject instanceof Array) {
-            return examplesArrayOrObject.map((exampleObject) => extractExample(exampleObject));
-        } else if (examplesArrayOrObject && typeof examplesArrayOrObject === 'object') {
-            return [extractExample(examplesArrayOrObject)];
-        }
-    }
-
-    return null;
+    return extractTransformedFieldOnSelectors('capec:Examples-Instances', 'capec:Example-Instance', extractExample);
 }
 
 function genProbingTechniques() {
-    const techniquesObject = capecObject['capec:Probing_Techniques'];
-    if (techniquesObject) {
-        let techniquesArrayOrObject = techniquesObject['capec:Probing_Technique'];
-        if (techniquesArrayOrObject instanceof Array) {
-            return techniquesArrayOrObject
-                .map((prerequisite) => stixGeneralGen.buildJoinedRecursiveText(prerequisite));
-        } else if (techniquesArrayOrObject && typeof techniquesArrayOrObject === 'object') {
-            return stixGeneralGen.buildRecursiveText(techniquesArrayOrObject);
-        }
-    }
-
-    return null;
+    return extractTransformedFieldOnSelectors('capec:Probing_Techniques',
+        'capec:Probing_Technique',
+        stixGeneralGen.buildJoinedRecursiveText);
 }
 
-// FIXME
 function genIndicatorsWarningsOfAttack() {
+    return extractTransformedFieldOnSelectors('capec:Indicators-Warnings_of_Attack',
+        'capec:Indicator-Warning_of_Attack',
+        stixGeneralGen.buildJoinedRecursiveText);
 }
 
 // FIXME
