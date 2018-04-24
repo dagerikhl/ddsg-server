@@ -84,6 +84,21 @@ function genTypicalLikelihoodOfExploit() {
     return likelihood;
 }
 
+function genExamplesInstances() {
+}
+
+// FIXME
+function genProbingTechniques() {
+}
+
+// FIXME
+function genIndicatorsWarningsOfAttack() {
+}
+
+// FIXME
+function genAttackMotivationConsequences() {
+}
+
 function genInjectionVector() {
     let injectionVector = null;
 
@@ -173,6 +188,10 @@ module.exports = {
     genAttackPrerequisites,
     genTypicalSeverity,
     genTypicalLikelihoodOfExploit,
+    genExamplesInstances,
+    genProbingTechniques,
+    genIndicatorsWarningsOfAttack,
+    genAttackMotivationConsequences,
     genInjectionVector,
     genPayload,
     genActivationZone,
