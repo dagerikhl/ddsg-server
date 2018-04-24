@@ -16,11 +16,11 @@ function genName() {
 }
 
 function genDescription() {
-    return stixGeneralGen.buildRecursiveText([], cweObject['Description']);
+    return stixGeneralGen.buildRecursiveText(cweObject['Description']);
 }
 
 function genExtendedDescription() {
-    return stixGeneralGen.buildRecursiveText([], cweObject['Extended_Description']);
+    return stixGeneralGen.buildRecursiveText(cweObject['Extended_Description']);
 }
 
 function genTypicalLikelihoodOfExploit() {
@@ -50,10 +50,10 @@ function genConsequences() {
 
 function genConsequence(consequenceObject) {
     return {
-        scope: stixGeneralGen.buildRecursiveText([], consequenceObject['Scope']),
-        impact: stixGeneralGen.buildRecursiveText([], consequenceObject['Impact']),
-        note: stixGeneralGen.buildRecursiveText([], consequenceObject['Note']),
-        likelihood: stixGeneralGen.buildRecursiveText([], consequenceObject['Likelihood'])
+        scope: stixGeneralGen.buildRecursiveText(consequenceObject['Scope']),
+        impact: stixGeneralGen.buildRecursiveText(consequenceObject['Impact']),
+        note: stixGeneralGen.buildRecursiveText(consequenceObject['Note']),
+        likelihood: stixGeneralGen.buildRecursiveText(consequenceObject['Likelihood'])
     };
 }
 

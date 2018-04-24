@@ -16,7 +16,7 @@ function genName() {
 }
 
 function genSummary() {
-    return stixGeneralGen.buildRecursiveText([], capecObject['capec:Description']['capec:Summary']);
+    return stixGeneralGen.buildRecursiveText(capecObject['capec:Description']['capec:Summary']);
 }
 
 function genAttackSteps() {
@@ -54,9 +54,9 @@ function genAttackPrerequisites() {
         let prerequisitesArrayOrObject = prerequisitesObject['capec:Attack_Prerequisite'];
         if (prerequisitesArrayOrObject instanceof Array) {
             return prerequisitesArrayOrObject
-                .map((prerequisite) => stixGeneralGen.buildJoinedRecursiveText([], prerequisite));
+                .map((prerequisite) => stixGeneralGen.buildJoinedRecursiveText(prerequisite));
         } else if (prerequisitesArrayOrObject && typeof prerequisitesArrayOrObject === 'object') {
-            return stixGeneralGen.buildRecursiveText([], prerequisitesArrayOrObject);
+            return stixGeneralGen.buildRecursiveText(prerequisitesArrayOrObject);
         }
     }
 
@@ -105,9 +105,9 @@ function genProbingTechniques() {
         let techniquesArrayOrObject = techniquesObject['capec:Probing_Technique'];
         if (techniquesArrayOrObject instanceof Array) {
             return techniquesArrayOrObject
-                .map((prerequisite) => stixGeneralGen.buildJoinedRecursiveText([], prerequisite));
+                .map((prerequisite) => stixGeneralGen.buildJoinedRecursiveText(prerequisite));
         } else if (techniquesArrayOrObject && typeof techniquesArrayOrObject === 'object') {
-            return stixGeneralGen.buildRecursiveText([], techniquesArrayOrObject);
+            return stixGeneralGen.buildRecursiveText(techniquesArrayOrObject);
         }
     }
 
@@ -188,16 +188,15 @@ function extractAttackPhase(phaseObject) {
     };
 
     phase.title = phaseObject['capec:Attack_Step_Title'] ? phaseObject['capec:Attack_Step_Title']['_text'] : null;
-    phase.description = stixGeneralGen.buildRecursiveText([], phaseObject['capec:Attack_Step_Description']);
+    phase.description = stixGeneralGen.buildRecursiveText(phaseObject['capec:Attack_Step_Description']);
 
     if (phaseObject['capec:Attack_Step_Techniques']) {
         const steps = phaseObject['capec:Attack_Step_Techniques']['capec:Attack_Step_Technique'];
         if (steps instanceof Array) {
-            phase.steps =
-                steps.map((step) => stixGeneralGen.buildJoinedRecursiveText([],
-                    step['capec:Attack_Step_Technique_Description']));
+            phase.steps = steps
+                .map((step) => stixGeneralGen.buildJoinedRecursiveText(step['capec:Attack_Step_Technique_Description']));
         } else if (steps && typeof steps === 'object') {
-            phase.steps = stixGeneralGen.buildRecursiveText([], steps['capec:Attack_Step_Technique_Description']);
+            phase.steps = stixGeneralGen.buildRecursiveText(steps['capec:Attack_Step_Technique_Description']);
         }
     }
 
@@ -212,7 +211,7 @@ function extractExample(exampleObject) {
 
     example.description =
         exampleObject['capec:Example-Instance_Description'] ?
-            stixGeneralGen.buildRecursiveText([], exampleObject['capec:Example-Instance_Description']) :
+            stixGeneralGen.buildRecursiveText(exampleObject['capec:Example-Instance_Description']) :
             null;
 
     const relations = exampleObject['capec:Example-Instance_Related_Vulnerabilities'];
@@ -220,7 +219,7 @@ function extractExample(exampleObject) {
         const references = relations['capec:Example-Instance_Related_Vulnerability'];
         if (references instanceof Array) {
             example.external_references = references.map((reference) => {
-                let referenceText = stixGeneralGen.buildJoinedRecursiveText([], reference);
+                let referenceText = stixGeneralGen.buildJoinedRecursiveText(reference);
 
                 if (referenceText.match(/CVE-\d{4}-\d+/g)) {
                     return stixGeneralGen.genCveExternalReference(referenceText);
@@ -229,7 +228,7 @@ function extractExample(exampleObject) {
                 return referenceText;
             });
         } else if (references && typeof references === 'object') {
-            let referenceText = stixGeneralGen.buildJoinedRecursiveText([], references);
+            let referenceText = stixGeneralGen.buildJoinedRecursiveText(references);
 
             if (referenceText.match(/CVE-\d{4}-\d+/g)) {
                 example.external_references = stixGeneralGen.genCveExternalReference(referenceText);
@@ -240,6 +239,20 @@ function extractExample(exampleObject) {
     }
 
     return example;
+}
+
+function extractTransformedFieldOnSelectors(selector1, selector2, transform) {
+    const outerObjects = capecObject[selector1];
+    if (outerObjects) {
+        let innerObjects = outerObjects[selector2];
+        if (innerObjects instanceof Array) {
+            return innerObjects.map(transform);
+        } else if (innerObjects && typeof innerObjects === 'object') {
+            return [transform(innerObjects)];
+        }
+    }
+
+    return null;
 }
 
 module.exports = {

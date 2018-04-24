@@ -12,7 +12,7 @@ function clear() {
 }
 
 function genMitigationText() {
-    return stixGeneralGen.buildRecursiveText([], mitigationObject);
+    return stixGeneralGen.buildRecursiveText(mitigationObject);
 }
 
 module.exports = {

@@ -30,8 +30,12 @@ function genCveExternalReference(name) {
     };
 }
 
-function buildJoinedRecursiveText(textArray, element) {
-    return buildRecursiveText(textArray, element).join(' ');
+function buildJoinedRecursiveText(element) {
+    return buildRecursiveText(element).join(' ');
+}
+
+function buildRecursiveText(element) {
+    return recurseText([], element);
 }
 
 /*
@@ -41,13 +45,13 @@ function buildJoinedRecursiveText(textArray, element) {
  * order of elements, meaning placement of codeblocks or lists, properly. This is due to CAPEC and CWE using a form of
  * breadth-first expansion of the nodes. But they do not use a trivial implementation.
  */
-function buildRecursiveText(textArray, element) {
+function recurseText(textArray, element) {
     if (typeof element === 'string') {
         return element;
     } else if (element instanceof Array) {
         return textArray.concat(...element
             .map((c) => {
-                return textArray.concat(buildRecursiveText(textArray, c));
+                return textArray.concat(recurseText(textArray, c));
             }));
     } else if (element && typeof element === 'object') {
         return textArray.concat(...Object.keys(element)
@@ -55,7 +59,7 @@ function buildRecursiveText(textArray, element) {
                 return c !== '_attributes';
             })
             .map((c) => {
-                return textArray.concat(buildRecursiveText(textArray, element[c]));
+                return textArray.concat(recurseText(textArray, element[c]));
             }));
     }
 
