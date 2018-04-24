@@ -53,7 +53,8 @@ function genAttackPrerequisites() {
     if (prerequisitesObject) {
         let prerequisitesArrayOrObject = prerequisitesObject['capec:Attack_Prerequisite'];
         if (prerequisitesArrayOrObject instanceof Array) {
-            return prerequisitesArrayOrObject.map((prerequisite) => stixGeneralGen.buildJoinedRecursiveText([], prerequisite));
+            return prerequisitesArrayOrObject
+                .map((prerequisite) => stixGeneralGen.buildJoinedRecursiveText([], prerequisite));
         } else if (prerequisitesArrayOrObject && typeof prerequisitesArrayOrObject === 'object') {
             return stixGeneralGen.buildRecursiveText([], prerequisitesArrayOrObject);
         }
@@ -85,6 +86,17 @@ function genTypicalLikelihoodOfExploit() {
 }
 
 function genExamplesInstances() {
+    const examplesObject = capecObject['capec:Examples-Instances'];
+    if (examplesObject) {
+        let examplesArrayOrObject = examplesObject['capec:Examples-Instance'];
+        if (examplesArrayOrObject instanceof Array) {
+            return examplesArrayOrObject.map((exampleObject) => extractExample(exampleObject));
+        } else if (examplesArrayOrObject && typeof examplesArrayOrObject === 'object') {
+            return [extractExample(examplesArrayOrObject)];
+        }
+    }
+
+    return null;
 }
 
 // FIXME
@@ -170,13 +182,34 @@ function extractAttackPhase(phaseObject) {
     if (phaseObject['capec:Attack_Step_Techniques']) {
         const steps = phaseObject['capec:Attack_Step_Techniques']['capec:Attack_Step_Technique'];
         if (steps instanceof Array) {
-            phase.steps = steps.map((step) => stixGeneralGen.buildJoinedRecursiveText([], step['capec:Attack_Step_Technique_Description']));
+            phase.steps =
+                steps.map((step) => stixGeneralGen.buildJoinedRecursiveText([],
+                    step['capec:Attack_Step_Technique_Description']));
         } else if (steps && typeof steps === 'object') {
             phase.steps = stixGeneralGen.buildRecursiveText([], steps['capec:Attack_Step_Technique_Description']);
         }
     }
 
     return phase;
+}
+
+function extractExample(exampleObject) {
+    let example = {
+        description: null,
+        external_references: null
+    };
+
+    example.description =
+        exampleObject['capec:Example-Instance_Description'] ?
+            stixGeneralGen.buildRecursiveText([], exampleObject['capec:Example-Instance_Description']) :
+            null;
+
+    if (exampleObject['capec:Example-Instance_Related_Vulnerabilities']) {
+        const externalReferences = exampleObject['capec:Example-Instance_Related_Vulnerabilities']['capec:Example-Instance_Related_Vulnerabilitie'];
+        if (externalReferences instanceof Array) {
+        } else if (externalReferences && typeof  externalReferences === 'object') {
+        }
+    }
 }
 
 module.exports = {
