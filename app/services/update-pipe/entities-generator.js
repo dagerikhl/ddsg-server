@@ -72,7 +72,7 @@ function genAttackPatternFrom(capecObject) {
 
     // Generated standard STIX properties
     attackPattern.name = stixAttackPatternGen.genName();
-    attackPattern.description = stixAttackPatternGen.genDescription();
+    attackPattern.description = stixAttackPatternGen.genSummary();
     attackPattern.external_references = stixGeneralGen.genMitreExternalReferences('capec', id);
 
     // Custom properties outside of STIX

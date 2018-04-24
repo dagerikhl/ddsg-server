@@ -15,7 +15,7 @@ function genName() {
     return capecObject['_attributes']['Name'];
 }
 
-function genDescription() {
+function genSummary() {
     return stixGeneralGen.buildRecursiveText([], capecObject['capec:Description']['capec:Summary']);
 }
 
@@ -93,7 +93,7 @@ module.exports = {
     feed,
     clear,
     genName,
-    genDescription,
+    genSummary,
     genSeverity,
     genLikelihood,
     genInjectionVector,
