@@ -82,12 +82,9 @@ function genAttackPatternFrom(capecObject) {
         severity: stixAttackPatternGen.genTypicalSeverity(),
         likelihood: stixAttackPatternGen.genTypicalLikelihoodOfExploit(),
         examples: stixAttackPatternGen.genExamplesInstances(),
-
-        // FIXME
-        // probing_techniques: stixAttackPatternGen.genProbingTechniques(),
-        // indicators: stixAttackPatternGen.genIndicatorsWarningsOfAttack(),
-        // motivation: stixAttackPatternGen.genAttackMotivationConsequences(),
-
+        probing_techniques: stixAttackPatternGen.genProbingTechniques(),
+        indicators: stixAttackPatternGen.genIndicatorsWarningsOfAttack(),
+        motivation: stixAttackPatternGen.genAttackMotivationConsequences(),
         injection_vector: stixAttackPatternGen.genInjectionVector(),
         payload: stixAttackPatternGen.genPayload(),
         activation_zone: stixAttackPatternGen.genActivationZone(),
