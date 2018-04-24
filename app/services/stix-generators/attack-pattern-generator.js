@@ -99,8 +99,19 @@ function genExamplesInstances() {
     return null;
 }
 
-// FIXME
 function genProbingTechniques() {
+    const techniquesObject = capecObject['capec:Probing_Techniques'];
+    if (techniquesObject) {
+        let techniquesArrayOrObject = techniquesObject['capec:Probing_Technique'];
+        if (techniquesArrayOrObject instanceof Array) {
+            return techniquesArrayOrObject
+                .map((prerequisite) => stixGeneralGen.buildJoinedRecursiveText([], prerequisite));
+        } else if (techniquesArrayOrObject && typeof techniquesArrayOrObject === 'object') {
+            return stixGeneralGen.buildRecursiveText([], techniquesArrayOrObject);
+        }
+    }
+
+    return null;
 }
 
 // FIXME
