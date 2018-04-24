@@ -88,7 +88,7 @@ function genTypicalLikelihoodOfExploit() {
 function genExamplesInstances() {
     const examplesObject = capecObject['capec:Examples-Instances'];
     if (examplesObject) {
-        let examplesArrayOrObject = examplesObject['capec:Examples-Instance'];
+        const examplesArrayOrObject = examplesObject['capec:Example-Instance'];
         if (examplesArrayOrObject instanceof Array) {
             return examplesArrayOrObject.map((exampleObject) => extractExample(exampleObject));
         } else if (examplesArrayOrObject && typeof examplesArrayOrObject === 'object') {
@@ -204,12 +204,31 @@ function extractExample(exampleObject) {
             stixGeneralGen.buildRecursiveText([], exampleObject['capec:Example-Instance_Description']) :
             null;
 
-    if (exampleObject['capec:Example-Instance_Related_Vulnerabilities']) {
-        const externalReferences = exampleObject['capec:Example-Instance_Related_Vulnerabilities']['capec:Example-Instance_Related_Vulnerabilitie'];
-        if (externalReferences instanceof Array) {
-        } else if (externalReferences && typeof  externalReferences === 'object') {
+    const relations = exampleObject['capec:Example-Instance_Related_Vulnerabilities'];
+    if (relations) {
+        const references = relations['capec:Example-Instance_Related_Vulnerability'];
+        if (references instanceof Array) {
+            example.external_references = references.map((reference) => {
+                let referenceText = stixGeneralGen.buildJoinedRecursiveText([], reference);
+
+                if (referenceText.match(/CVE-\d{4}-\d+/g)) {
+                    return stixGeneralGen.genCveExternalReference(referenceText);
+                }
+
+                return referenceText;
+            });
+        } else if (references && typeof references === 'object') {
+            let referenceText = stixGeneralGen.buildJoinedRecursiveText([], references);
+
+            if (referenceText.match(/CVE-\d{4}-\d+/g)) {
+                example.external_references = stixGeneralGen.genCveExternalReference(referenceText);
+            } else {
+                example.external_references = [referenceText];
+            }
         }
     }
+
+    return example;
 }
 
 module.exports = {

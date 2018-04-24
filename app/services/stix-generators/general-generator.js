@@ -22,14 +22,12 @@ function genMitreExternalReferences(source, id) {
     ];
 }
 
-function genCveExternalReferences(name) {
-    return [
-        {
-            source_name: 'cve',
-            id: name.toUpperCase(),
-            url: `http://cve.mitre.org/cgi-bin/cvename.cgi?name=${name}`
-        }
-    ];
+function genCveExternalReference(name) {
+    return {
+        source_name: 'cve',
+        id: name.toUpperCase(),
+        url: `http://cve.mitre.org/cgi-bin/cvename.cgi?name=${name}`
+    };
 }
 
 function buildJoinedRecursiveText(textArray, element) {
@@ -67,7 +65,7 @@ function buildRecursiveText(textArray, element) {
 module.exports = {
     createEntity,
     genMitreExternalReferences,
-    genCveExternalReferences,
+    genCveExternalReference,
     buildJoinedRecursiveText,
     buildRecursiveText
 };
