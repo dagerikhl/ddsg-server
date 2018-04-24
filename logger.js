@@ -5,16 +5,18 @@ const format = winston.format;
 const myFormat = format.printf((info) => {
     const timestamp = (new Date()).toLocaleTimeString();
 
-    let message;
+    let parsedMessage;
     if (typeof info.message !== 'string' && Object.keys(info.message).length > 1) {
-        message = `\n${JSON.stringify({ ...info.message }, null, 2)}`;
+        parsedMessage = `\n${JSON.stringify({ ...info.message }, null, 2)}`;
     } else if (typeof info.message !== 'string') {
-        message = `${JSON.stringify(info.message)}`;
+        parsedMessage = `${JSON.stringify(info.message)}`;
     } else {
-        message = info.message;
+        parsedMessage = info.message;
     }
 
-    return `${timestamp} ${info.level}: ${message}`;
+    let logMessage = `${timestamp} ${info.level}: ${parsedMessage}`;
+
+    return logMessage;
 });
 
 const logger = winston.createLogger({
