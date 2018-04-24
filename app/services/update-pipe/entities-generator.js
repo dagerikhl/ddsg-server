@@ -77,13 +77,18 @@ function genAttackPatternFrom(capecObject) {
 
     // Custom properties outside of STIX
     attackPattern.custom = {
-        attackSteps: stixAttackPatternGen.genAttackSteps(),
-        severity: stixAttackPatternGen.genSeverity(),
-        likelihood: stixAttackPatternGen.genLikelihood(),
+        steps: stixAttackPatternGen.genAttackSteps(),
+        prerequisites: stixAttackPatternGen.genAttackPrerequisites(),
+        severity: stixAttackPatternGen.genTypicalSeverity(),
+        likelihood: stixAttackPatternGen.genTypicalLikelihoodOfExploit(),
+        // examples: stixAttackPatternGen.genExamplesInstances(),
+        // probing_techniques: stixAttackPatternGen.genProbingTechniques(),
+        // indicators: stixAttackPatternGen.genIndicatorsWarningsOfAttack(),
+        // motivation: stixAttackPatternGen.genAttackMotivationConsequences(),
         injection_vector: stixAttackPatternGen.genInjectionVector(),
         payload: stixAttackPatternGen.genPayload(),
         activation_zone: stixAttackPatternGen.genActivationZone(),
-        cia: stixAttackPatternGen.genCia()
+        impact: stixAttackPatternGen.genCiaImpact()
     };
 
     stixAttackPatternGen.clear();
@@ -144,7 +149,7 @@ function genWeaknessFrom(cweObject) {
     // Custom properties outside of STIX
     weakness.custom = {
         extended_description: stixWeaknessGen.genExtendedDescription(),
-        likelihood: stixWeaknessGen.genLikelihood(),
+        likelihood: stixWeaknessGen.genTypicalLikelihoodOfExploit(),
         consequences: stixWeaknessGen.genConsequences()
     };
 

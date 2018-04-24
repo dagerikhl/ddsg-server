@@ -48,7 +48,21 @@ function genAttackSteps() {
     return attackSteps;
 }
 
-function genSeverity() {
+function genAttackPrerequisites() {
+    const prerequisitesObject = capecObject['capec:Attack_Prerequisites'];
+    if (prerequisitesObject) {
+        let prerequisitesArrayOrObject = prerequisitesObject['capec:Attack_Prerequisite'];
+        if (prerequisitesArrayOrObject instanceof Array) {
+            return prerequisitesArrayOrObject.map((prerequisite) => stixGeneralGen.buildJoinedRecursiveText([], prerequisite));
+        } else if (prerequisitesArrayOrObject && typeof prerequisitesArrayOrObject === 'object') {
+            return stixGeneralGen.buildRecursiveText([], prerequisitesArrayOrObject);
+        }
+    }
+
+    return null;
+}
+
+function genTypicalSeverity() {
     let severity = null;
 
     const severityObject = capecObject['capec:Typical_Severity'];
@@ -59,7 +73,7 @@ function genSeverity() {
     return severity;
 }
 
-function genLikelihood() {
+function genTypicalLikelihoodOfExploit() {
     let likelihood = null;
 
     const likelihoodObject = capecObject['capec:Typical_Likelihood_of_Exploit'];
@@ -103,7 +117,7 @@ function genActivationZone() {
     return activationZone;
 }
 
-function genCia() {
+function genCiaImpact() {
     let cia = null;
 
     const ciaObject = capecObject['capec:CIA_Impact'];
@@ -140,19 +154,14 @@ function extractAttackPhase(phaseObject) {
 
     if (phaseObject['capec:Attack_Step_Techniques']) {
         const steps = phaseObject['capec:Attack_Step_Techniques']['capec:Attack_Step_Technique'];
-        logger.debug(steps);
         if (steps instanceof Array) {
-            phase.steps = steps.map((step) => stixGeneralGen.buildRecursiveText([], step['capec:Attack_Step_Technique_Description'])
-                .join(' '));
+            phase.steps = steps.map((step) => stixGeneralGen.buildJoinedRecursiveText([], step['capec:Attack_Step_Technique_Description']));
         } else if (steps && typeof steps === 'object') {
-            phase.steps = [
-                stixGeneralGen.buildRecursiveText([], steps['capec:Attack_Step_Technique_Description'])
-                    .join(' ')
-            ];
+            phase.steps = stixGeneralGen.buildRecursiveText([], steps['capec:Attack_Step_Technique_Description']);
         }
     }
 
-    return phase.title || phase.description || phase.steps ? phase : null;
+    return phase;
 }
 
 module.exports = {
@@ -161,10 +170,11 @@ module.exports = {
     genName,
     genSummary,
     genAttackSteps,
-    genSeverity,
-    genLikelihood,
+    genAttackPrerequisites,
+    genTypicalSeverity,
+    genTypicalLikelihoodOfExploit,
     genInjectionVector,
     genPayload,
     genActivationZone,
-    genCia
+    genCiaImpact
 };

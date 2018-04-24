@@ -22,6 +22,10 @@ function genMitreExternalReferences(source, id) {
     ];
 }
 
+function buildJoinedRecursiveText(textArray, element) {
+    return buildRecursiveText(textArray, element).join(' ');
+}
+
 /*
  * TODO This may need to be reworked to preserve ordering of elements in text structures
  *
@@ -53,5 +57,6 @@ function buildRecursiveText(textArray, element) {
 module.exports = {
     createEntity,
     genMitreExternalReferences,
+    buildJoinedRecursiveText,
     buildRecursiveText
 };

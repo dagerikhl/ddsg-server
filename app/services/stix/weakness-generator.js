@@ -23,7 +23,7 @@ function genExtendedDescription() {
     return stixGeneralGen.buildRecursiveText([], cweObject['Extended_Description']);
 }
 
-function genLikelihood() {
+function genTypicalLikelihoodOfExploit() {
     let likelihood = null;
 
     const likelihoodObject = cweObject['Likelihood_Of_Exploit'];
@@ -63,6 +63,6 @@ module.exports = {
     genName,
     genDescription,
     genExtendedDescription,
-    genLikelihood,
+    genTypicalLikelihoodOfExploit,
     genConsequences
 };
