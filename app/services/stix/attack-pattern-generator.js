@@ -19,6 +19,35 @@ function genSummary() {
     return stixGeneralGen.buildRecursiveText([], capecObject['capec:Description']['capec:Summary']);
 }
 
+function genAttackSteps() {
+    let attackSteps = {
+        explore: null,
+        experiment: null,
+        exploit: null
+    };
+
+    if (capecObject['capec:Description']['capec:Attack_Execution_Flow']) {
+        const phases = capecObject['capec:Description']['capec:Attack_Execution_Flow']['capec:Attack_Phases']['capec:Attack_Phase'];
+
+        // Can be: explore, experiment, and exploit
+        if (phases instanceof Array) {
+            for (let phase of phases) {
+                let phaseName = phase['_attributes']['Name'];
+                let phaseObjects = phase['capec:Attack_Steps']['capec:Attack_Step'];
+
+                attackSteps[phaseName.toLowerCase()] = extractAttackPhases(phaseObjects);
+            }
+        } else if (phases && typeof phases === 'object') {
+            let phaseName = phases['_attributes']['Name'];
+            let phaseObjects = phases['capec:Attack_Steps']['capec:Attack_Step'];
+
+            attackSteps[phaseName.toLowerCase()] = extractAttackPhases(phaseObjects);
+        }
+    }
+
+    return attackSteps;
+}
+
 function genSeverity() {
     let severity = null;
 
@@ -89,11 +118,49 @@ function genCia() {
     return cia;
 }
 
+function extractAttackPhases(phaseObjects) {
+    if (phaseObjects instanceof Array) {
+        return phaseObjects.map((phaseObject) => extractAttackPhase(phaseObject['capec:Custom_Attack_Step']));
+    } else if (phaseObjects && typeof phaseObjects === 'object') {
+        return [extractAttackPhase(phaseObjects['capec:Custom_Attack_Step'])];
+    }
+
+    return null;
+}
+
+function extractAttackPhase(phaseObject) {
+    let phase = {
+        title: null,
+        description: null,
+        steps: null
+    };
+
+    phase.title = phaseObject['capec:Attack_Step_Title'] ? phaseObject['capec:Attack_Step_Title']['_text'] : null;
+    phase.description = stixGeneralGen.buildRecursiveText([], phaseObject['capec:Attack_Step_Description']);
+
+    if (phaseObject['capec:Attack_Step_Techniques']) {
+        const steps = phaseObject['capec:Attack_Step_Techniques']['capec:Attack_Step_Technique'];
+        logger.debug(steps);
+        if (steps instanceof Array) {
+            phase.steps = steps.map((step) => stixGeneralGen.buildRecursiveText([], step['capec:Attack_Step_Technique_Description'])
+                .join(' '));
+        } else if (steps && typeof steps === 'object') {
+            phase.steps = [
+                stixGeneralGen.buildRecursiveText([], steps['capec:Attack_Step_Technique_Description'])
+                    .join(' ')
+            ];
+        }
+    }
+
+    return phase.title || phase.description || phase.steps ? phase : null;
+}
+
 module.exports = {
     feed,
     clear,
     genName,
     genSummary,
+    genAttackSteps,
     genSeverity,
     genLikelihood,
     genInjectionVector,

@@ -77,6 +77,7 @@ function genAttackPatternFrom(capecObject) {
 
     // Custom properties outside of STIX
     attackPattern.custom = {
+        attackSteps: stixAttackPatternGen.genAttackSteps(),
         severity: stixAttackPatternGen.genSeverity(),
         likelihood: stixAttackPatternGen.genLikelihood(),
         injection_vector: stixAttackPatternGen.genInjectionVector(),
