@@ -1,6 +1,9 @@
 {
     "verbose": true,
     "ignore": [
+        "**/*.json",
+        "**/*.log",
+        "**/*___jb_tmp___",
         "data/*"
     ]
 }
