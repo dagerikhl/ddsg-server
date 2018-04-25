@@ -154,13 +154,21 @@ function genAssetFor(capecObject) {
 function genRelationships(objects, SDOs) {
     let relationships = [];
 
-    // Course of Actions mitigates Attack Patterns
     for (let attackPattern of SDOs.attack_patterns) {
+        // Course of Actions mitigates Attack Patterns
         let courseOfActions = SDOs.course_of_actions.filter((e) => {
             return e.external_references[0].id === attackPattern.external_references[0].id;
         });
-        let mitigationRelationships = stixRelationshipGen.genMitigationRelationships(attackPattern, courseOfActions);
+        let mitigationRelationships = stixRelationshipGen
+            .genRelationshipOfType('mitigates', attackPattern, courseOfActions, true);
         relationships = relationships.concat(mitigationRelationships);
+
+        // Attack Patterns targets Assets
+        let assets = SDOs.assets.filter((e) => {
+            return e.external_references[0].id === attackPattern.external_references[0].id;
+        });
+        let assetRelationship = stixRelationshipGen.genRelationshipOfType('targets', attackPattern, assets);
+        relationships = relationships.concat(assetRelationship);
     }
 
     return relationships;
