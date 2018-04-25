@@ -15,9 +15,7 @@ const activeFilters = [
 // Local state
 let objects = {
     capecObjects: null,
-    cweObjects: null,
-    capecObjectsFiltered: null,
-    cweObjectsFiltered: null
+    capecObjectsFiltered: null
 };
 
 function fetchUpdatedDataFromSources() {
@@ -35,24 +33,11 @@ function fetchUpdatedDataFromSources() {
             filterAndGenEntities();
         });
     });
-
-    // Fetch CWE source
-    versionScraper.getNewestVersionOfSource('cwe', (version) => {
-        sourceFetcher.fetchCweData(version, (data) => {
-            objects.cweObjects = data;
-
-            if (process.env.LOCAL_JSON_STORE === 'true') {
-                fileHandler.setFileContent('cweObjects.json', JSON.stringify(data, null, 4));
-            }
-
-            filterAndGenEntities();
-        });
-    });
 }
 
 function filterAndGenEntities() {
     // Only proceed when we have fetched all sources
-    if (!objects.capecObjects || !objects.cweObjects) {
+    if (!objects.capecObjects) {
         return;
     }
 

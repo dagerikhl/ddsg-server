@@ -1,7 +1,6 @@
 function filterByActiveFilters(objects, activeFilters) {
     // Set filtered objects to all objects initially
     objects.capecObjectsFiltered = objects.capecObjects;
-    objects.cweObjectsFiltered = objects.cweObjects;
 
     for (let filter of activeFilters) {
         if (filter.toLowerCase() === 'deprecated') {
@@ -22,12 +21,6 @@ function byDeprecated(objects) {
             return e['_attributes']['Status'].toLowerCase() !== 'deprecated';
         });
     objects.capecObjectsFiltered['capec:Attack_Pattern_Catalog']['capec:Attack_Patterns']['capec:Attack_Pattern'] = capecAttackPatternObjectsFiltered;
-
-    const cweWeaknessObjectsFiltered = objects.cweObjectsFiltered['Weakness_Catalog']['Weaknesses']['Weakness']
-        .filter((e) => {
-            return e['_attributes']['Status'].toLowerCase() !== 'deprecated';
-        });
-    objects.cweObjectsFiltered['Weakness_Catalog']['Weaknesses']['Weakness'] = cweWeaknessObjectsFiltered;
 }
 
 function byCapecId(objects, id) {
@@ -38,6 +31,7 @@ function byCapecId(objects, id) {
     objects.capecObjectsFiltered['capec:Attack_Pattern_Catalog']['capec:Attack_Patterns']['capec:Attack_Pattern'] = capecAttackPatternObjectsFiltered;
 }
 
+// TODO Fix this so it doesn't use weaknesses and CWE to filter on OWASP Top 10
 function byOwaspTop10(objects) {
     // Extract all direct members (classes, bases, and variants) of OWASP Top 10 categories listed in OWASP Top 10 view
     const cweView = objects.cweObjectsFiltered['Weakness_Catalog']['Views']['View']
