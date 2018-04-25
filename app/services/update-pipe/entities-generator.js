@@ -1,3 +1,4 @@
+const stixAssetGen = require('../stix-generators/asset-generator');
 const stixAttackPatternGen = require('../stix-generators/attack-pattern-generator');
 const stixCourseOfActionGen = require('../stix-generators/course-of-action-generator');
 const stixGeneralGen = require('../stix-generators/general-generator');
@@ -22,10 +23,11 @@ const stixRelationshipGen = require('../stix-generators/relationship-generator')
  */
 function genStixEntities(objects, cb) {
     const attackPatternObjects = objects.capecObjectsFiltered['capec:Attack_Pattern_Catalog']['capec:Attack_Patterns']['capec:Attack_Pattern'];
-    const [attackPatterns, courseOfActions] = genAttackPatternsAndCourseOfActions(attackPatternObjects);
+    const [attackPatterns, courseOfActions, assets] = genEntitiesFromAttackPatterns(attackPatternObjects);
     const SDOs = {
         attack_patterns: attackPatterns,
-        course_of_actions: courseOfActions
+        course_of_actions: courseOfActions,
+        assets: assets
     };
 
     const relationships = genRelationships(objects, SDOs);
@@ -41,9 +43,10 @@ function genStixEntities(objects, cb) {
     cb(entities);
 }
 
-function genAttackPatternsAndCourseOfActions(attackPatternObjects) {
+function genEntitiesFromAttackPatterns(attackPatternObjects) {
     const attackPatterns = [];
     let courseOfActions = [];
+    let assets = [];
     for (let capecObject of attackPatternObjects) {
         attackPatterns.push(genAttackPatternFrom(capecObject));
 
@@ -51,11 +54,17 @@ function genAttackPatternsAndCourseOfActions(attackPatternObjects) {
         if (tempCourseOfActions) {
             courseOfActions = courseOfActions.concat(tempCourseOfActions);
         }
+
+        const tempAsset = genAssetFor(capecObject);
+        if (tempAsset) {
+            assets.push(tempAsset);
+        }
     }
 
     return [
         attackPatterns,
-        courseOfActions
+        courseOfActions,
+        assets
     ];
 }
 
@@ -121,6 +130,27 @@ function genCourseOfActionFrom(id, capecObjectMitigation) {
     return courseOfAction;
 }
 
+function genAssetFor(capecObject) {
+    // Handle no assets or empty activation zone field
+    const assetsObject = capecObject['capec:Activation_Zone'];
+    if (!assetsObject || Object.keys(assetsObject).length === 0) {
+        return null;
+    }
+
+    const id = capecObject['_attributes']['ID'];
+
+    stixAssetGen.feed(assetsObject);
+
+    const asset = stixGeneralGen.createEntity('asset');
+
+    // Generated standard STIX properties
+    asset.description = stixAssetGen.genAssetText();
+    asset.external_references = stixGeneralGen.genMitreExternalReferences('capec', id);
+
+    stixAssetGen.clear();
+    return asset;
+}
+
 function genRelationships(objects, SDOs) {
     let relationships = [];
 
@@ -130,7 +160,6 @@ function genRelationships(objects, SDOs) {
             return e.external_references[0].id === attackPattern.external_references[0].id;
         });
         let mitigationRelationships = stixRelationshipGen.genMitigationRelationships(attackPattern, courseOfActions);
-
         relationships = relationships.concat(mitigationRelationships);
     }
 
