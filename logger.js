@@ -2,9 +2,19 @@ const winston = require('winston');
 
 const format = winston.format;
 
-const myFormat = format.printf((info) => {
-    const timestamp = (new Date()).toLocaleTimeString();
+const myFormatWithTimeFormat = (timeFormat) => {
+    let time = new Date();
 
+    switch (timeFormat) {
+    case 'local-time':
+        return myFormatWithTimestamp(time.toLocaleTimeString());
+    case 'iso':
+    default:
+        return myFormatWithTimestamp(time.toISOString());
+    }
+};
+
+const myFormatWithTimestamp = (timestamp) => format.printf((info) => {
     let parsedMessage;
     if (info.message && typeof info.message !== 'string' && Object.keys(info.message).length > 1) {
         parsedMessage = `\n${JSON.stringify({ ...info.message }, null, 2)}`;
@@ -14,24 +24,26 @@ const myFormat = format.printf((info) => {
         parsedMessage = info.message;
     }
 
-    let logMessage = `${timestamp} ${info.level}: ${parsedMessage}`;
+    const logMessage = `${timestamp} ${info.level}: ${parsedMessage}`;
 
     return logMessage;
 });
 
 const logger = winston.createLogger({
     level: 'info',
-    format: format.combine(format.colorize(), myFormat),
     transports: [
         new winston.transports.Console({
-            level: 'silly'
+            level: 'silly',
+            format: format.combine(format.colorize(), myFormatWithTimeFormat('local-time'))
         }),
         new winston.transports.File({
+            level: 'error',
             filename: 'error.log',
-            level: 'error'
+            format: myFormatWithTimeFormat('iso')
         }),
         new winston.transports.File({
-            filename: 'combined.log'
+            filename: 'combined.log',
+            format: myFormatWithTimeFormat('iso')
         })
     ]
 });
