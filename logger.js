@@ -6,7 +6,7 @@ const myFormat = format.printf((info) => {
     const timestamp = (new Date()).toLocaleTimeString();
 
     let parsedMessage;
-    if (typeof info.message !== 'string' && Object.keys(info.message).length > 1) {
+    if (info.message && typeof info.message !== 'string' && Object.keys(info.message).length > 1) {
         parsedMessage = `\n${JSON.stringify({ ...info.message }, null, 2)}`;
     } else if (typeof info.message !== 'string') {
         parsedMessage = `${JSON.stringify(info.message)}`;
