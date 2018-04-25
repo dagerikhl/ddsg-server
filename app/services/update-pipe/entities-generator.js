@@ -21,7 +21,8 @@ const stixRelationshipGen = require('../stix-generators/relationship-generator')
  * @param cb Used to relay the generated entities back to the calling function.
  */
 function genStixEntities(objects, cb) {
-    const [attackPatterns, courseOfActions] = genAttackPatternsAndCourseOfActions(objects);
+    const attackPatternObjects = objects.capecObjectsFiltered['capec:Attack_Pattern_Catalog']['capec:Attack_Patterns']['capec:Attack_Pattern'];
+    const [attackPatterns, courseOfActions] = genAttackPatternsAndCourseOfActions(attackPatternObjects);
     const SDOs = {
         attack_patterns: attackPatterns,
         course_of_actions: courseOfActions
@@ -40,10 +41,10 @@ function genStixEntities(objects, cb) {
     cb(entities);
 }
 
-function genAttackPatternsAndCourseOfActions(objects) {
+function genAttackPatternsAndCourseOfActions(attackPatternObjects) {
     const attackPatterns = [];
     let courseOfActions = [];
-    for (let capecObject of objects.capecObjectsFiltered) {
+    for (let capecObject of attackPatternObjects) {
         attackPatterns.push(genAttackPatternFrom(capecObject));
 
         const tempCourseOfActions = genCourseOfActionsFor(capecObject);

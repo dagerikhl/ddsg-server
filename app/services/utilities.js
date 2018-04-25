@@ -8,7 +8,12 @@ function uuid() {
     return uuidv4();
 }
 
+function uniqueFilter(element, index, list) {
+    return list.indexOf(element) === index;
+}
+
 module.exports = {
     timestamp,
-    uuid
+    uuid,
+    uniqueFilter
 };
