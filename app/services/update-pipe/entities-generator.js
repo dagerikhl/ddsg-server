@@ -147,6 +147,11 @@ function genAssetFor(capecObject) {
     asset.description = stixAssetGen.genAssetText();
     asset.external_references = stixGeneralGen.genMitreExternalReferences('capec', id);
 
+    // Custom properties outside of STIX
+    asset.custom = {
+        category: stixAssetGen.categorize(asset.description)
+    };
+
     stixAssetGen.clear();
     return asset;
 }
