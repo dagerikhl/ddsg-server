@@ -126,8 +126,10 @@ function genCourseOfActionFrom(id, capecObjectMitigation) {
     courseOfAction.external_references = stixGeneralGen.genMitreExternalReferences('capec', id);
 
     // Custom properties outside of STIX
+    const [category, mitigation] = stixCourseOfActionGen.categorize(courseOfAction.description);
     courseOfAction.custom = {
-        category: stixCourseOfActionGen.categorize(courseOfAction.description)
+        category,
+        mitigation
     };
 
     stixCourseOfActionGen.clear();
