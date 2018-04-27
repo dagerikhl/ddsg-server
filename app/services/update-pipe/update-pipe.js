@@ -24,6 +24,7 @@ function fetchUpdatedDataFromSources() {
     // Fetch CAPEC source
     versionScraper.getNewestVersionOfSource('capec', (version) => {
         sourceFetcher.fetchCapecData(version, (data) => {
+            logger.info('CAPEC source fetched.');
             objects.capecObjects = data;
 
             if (process.env.LOCAL_JSON_STORE === 'true') {
@@ -38,11 +39,14 @@ function fetchUpdatedDataFromSources() {
 function filterAndGenEntities() {
     // Only proceed when we have fetched all sources
     if (!objects.capecObjects) {
+        logger.info('Attempting to filter and generate entities, but not all sources have finished fetching.');
         return;
     }
 
     filterer.filterByActiveFilters(objects, activeFilters);
-    entitiesGenerator.genStixEntities(objects, saveEntities);
+    const stixEntities = entitiesGenerator.genStixEntities(objects);
+
+    saveEntities(stixEntities);
 }
 
 function saveEntities(entities) {

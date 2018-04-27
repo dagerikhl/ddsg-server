@@ -19,9 +19,8 @@ const stixRelationshipGen = require('../stix-generators/relationship-generator')
  * 1. Relationship.
  *
  * @param objects Contains the filtered and unfiltered objects from data sources.
- * @param cb Used to relay the generated entities back to the calling function.
  */
-function genStixEntities(objects, cb) {
+function genStixEntities(objects) {
     const attackPatternObjects = objects.capecObjectsFiltered['capec:Attack_Pattern_Catalog']['capec:Attack_Patterns']['capec:Attack_Pattern'];
     const [attackPatterns, courseOfActions, assets] = genEntitiesFromAttackPatterns(attackPatternObjects);
     const SDOs = {
@@ -40,7 +39,7 @@ function genStixEntities(objects, cb) {
         SROs
     };
 
-    cb(entities);
+    return entities;
 }
 
 function genEntitiesFromAttackPatterns(attackPatternObjects) {
@@ -125,6 +124,11 @@ function genCourseOfActionFrom(id, capecObjectMitigation) {
     // Generated standard STIX properties
     courseOfAction.description = stixCourseOfActionGen.genMitigationText();
     courseOfAction.external_references = stixGeneralGen.genMitreExternalReferences('capec', id);
+
+    // Custom properties outside of STIX
+    courseOfAction.custom = {
+        category: stixCourseOfActionGen.categorize(courseOfAction.description)
+    };
 
     stixCourseOfActionGen.clear();
     return courseOfAction;

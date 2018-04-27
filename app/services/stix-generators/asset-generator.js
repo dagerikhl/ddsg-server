@@ -22,12 +22,11 @@ function genAssetText() {
 
 /**
  * This function only considers the data-set of assets filtered by the OWASP Top 10 list. This can be improved.
- * Returns null if it can not find a fitting category.
  *
  * TODO Improve the parsing this function does so it more intelligently assigns a category and handles bigger data sets.
  *
  * @param description The assets decriptive text, as parsed from CAPEC's field "activation zone".
- * @returns {string|null} A formatted string representing a generalized category of this asset.
+ * @returns {string | null} A formatted string representing a generalized category of this asset. null if not found.
  */
 function categorize(description) {
     let descriptionString = description.join(' ');
