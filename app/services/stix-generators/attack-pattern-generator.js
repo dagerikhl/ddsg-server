@@ -99,11 +99,18 @@ function genAttackMotivationConsequences() {
 }
 
 function genInjectionVector() {
-    let injectionVector = null;
+    let injectionVector = {
+        description: null,
+        category: null
+    };
 
     const injectionVectorObject = capecObject['capec:Injection_Vector'];
     if (injectionVectorObject && injectionVectorObject['capec:Text']) {
-        injectionVector = injectionVectorObject['capec:Text']['_text'];
+        injectionVector.description = injectionVectorObject['capec:Text']['_text'];
+    }
+
+    if (injectionVector.description) {
+        injectionVector.category = categorizeInjectionVector(injectionVector.description);
     }
 
     return injectionVector;
@@ -254,6 +261,24 @@ function extractTransformedFieldOnSelectors(selector1, selector2, transform) {
     }
 
     return null;
+}
+
+function categorizeInjectionVector(description) {
+    let categories = [];
+    if (description.match(
+        /(user[- ]?(control(led|lable)?)?|malicious) ?(input|request|variable)s?|client.*parameters?|app(lication).*interface|(e|e-)?mail|(url|resource)[- ]?paths?/gi)) {
+        categories.push('Client');
+    }
+    if (description.match(
+        /(https?|server|api|communication|web|client|app(lication)?).*(call|request|response|protocol|cookie)s?|get|post|cookie?s|data.*transit/gi)) {
+        categories.push('Network');
+    }
+    if (description.match(
+        /append(ing|s)? ?(delimiter|option|switche?)s?|sym(bolic)?[- ]?links?|config(uration)?s?[- ]?files?|files?[- ]?paths?/gi)) {
+        categories.push('Server');
+    }
+
+    return categories.length > 0 ? categories : null;
 }
 
 module.exports = {
