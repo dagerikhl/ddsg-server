@@ -25,326 +25,360 @@ function genMitigationText() {
  * action, and a formatted string representing the mitigation placed by taking this course of action. null if not found.
  */
 function categorize(description) {
-    let descriptionString = description.join(' ');
+    let d = description.join(' ');
 
-    if (descriptionString.match(/(roles?|(grant|deny) (users? )?access)+/gi)) {
+    if (d.match(/(roles?|(grant|deny) (users? )?access)+/gi)) {
         return [
-            'Use Access Control List (ACL)',
-            'Access Control List (ACL)'
+            'Use access control list (ACL)',
+            'Access control list (ACL)'
         ];
-    } else if (descriptionString.match(/(don't|do not).*(single security (mechanism|system|implementation))/gi)) {
+    } else if (d.match(/(don't|do not).*(single security (mechanism|system|implementation))/gi)) {
         return [
-            'Use Multiple Security Mechanisms',
-            'Usage of Multiple Security Mechanisms'
+            'Use multiple security mechanisms',
+            'Usage of multiple security mechanisms'
         ];
-    } else if (descriptionString.match(/(https|ssl|tsl|ssh|scp)/gi)) {
+    } else if (d.match(/(https|ssl|tsl|ssh|scp)|(encrypt (all)? ?communications?)/gi)) {
         return [
-            'Encrypt Communication with SSL, TSL, SSH, SCP, or others',
-            'Encrypted Communication Channels'
+            'Encrypt communication (with SSL, TSL, SSH, SCP, or others)',
+            'Encrypted communication channels'
         ];
-    } else if (descriptionString.match(/(modify|change|alter).*session tokens?/gi)) {
+    } else if (d.match(/(modify|change|alter).*session tokens?/gi)) {
         return [
-            'Implement Modification of Session Tokens',
-            'Session Token Modificator'
+            'Implement modification of session tokens',
+            'Session token modificator'
         ];
-    } else if (descriptionString.match(/(prevent|disable|turn off|avoid|(do not|don't) allow).*script(ing|s)?/gi)) {
+    } else if (d.match(/(prevent|disable|turn off|avoid|(do not|don't) allow).*script(ing|s)?/gi)) {
         return [
-            'Disable Script Execution',
-            'Script Disabler'
+            'Disable script execution',
+            'Script disabler'
         ];
-    } else if (descriptionString.match(
+    } else if (d.match(
         /((powerful|strong|tough).*(input|text|string) ?validation)|(validate (input|text|string)s?.*strongly)/gi)) {
         return [
-            'Strongly Validate Input',
-            'Strong Input Validator'
+            'Strongly validate input',
+            'Strong input validator'
         ];
-    } else if (descriptionString.match(
+    } else if (d.match(
         /(((input|text|string) ?validation)|(validate (.*user.*)(input|text|string)s?))|(treat.*inputs?.*guilty)/gi)) {
         return [
-            'Validate Input',
-            'Input Validator'
+            'Validate input',
+            'Input validator'
         ];
-    } else if (descriptionString.match(/validation|validate/gi)) {
+    } else if (d.match(/validation|validate/gi)) {
         return [
             'Validate',
             'Validator'
         ];
-    } else if (descriptionString.match(/(privilege?|restrict|trust|secure)(ed)?/gi)) {
+    } else if (d.match(/(privilege?|restrict|trust|secure)(ed)?/gi)) {
         return [
-            'Restrict Privileged Areas',
-            'Privileged Zone Restrictor'
+            'Restrict privileged areas',
+            'Privileged zone restrictor'
         ];
-    } else if (descriptionString.match(/encod(e|ing)/gi)) {
+    } else if (d.match(/encod(e|ing)/gi)) {
         return [
-            'Encode Input/Output',
-            'Input/Output Encoder'
+            'Encode input/output',
+            'Input/output encoder'
         ];
-    } else if (descriptionString.match(/(disable|turn off|remove).*mssql/gi)) {
+    } else if (d.match(/(disable|turn off|remove).*mssql/gi)) {
         return [
             'Disable MSSQL',
-            'MSSQL Disabler'
+            'MSSQL disabler'
         ];
-    } else if (descriptionString.match(/(data|files?) ?access/gi)) {
+    } else if (d.match(/(data|files?) ?access/gi)) {
         return [
-            'Restrict Data Access',
-            'Data Access Restrictor'
+            'Restrict data access',
+            'Data access restrictor'
         ];
-    } else if (descriptionString.match(/up[- ]?to[- ]?date|updates?|patch(ing)?/gi)) {
+    } else if (d.match(/up[- ]?to[- ]?date|updates?|patch(ing)?/gi)) {
         return [
-            'Keep System Up To Date',
-            'System Updater'
+            'Keep system up to date',
+            'System updater'
         ];
-    } else if (descriptionString.match(/not.*file[- ]?(name|content|type)s?/gi)) {
+    } else if (d.match(/not.*file[- ]?(name|content|type)s?/gi)) {
         return [
-            'Avoid Basing Logic on File-types',
-            'Don\'t Base Logic on File-types'
+            'Avoid basing logic on file-types',
+            'Don\'t base logic on file-types'
         ];
-    } else if (descriptionString.match(/parameters?.*bind(ing)?/gi)) {
+    } else if (d.match(/parameters?.*bind(ing)?/gi)) {
         return [
-            'Bind Parameters',
-            'Parameter Binder'
+            'Bind parameters',
+            'Parameter binder'
         ];
-    } else if (descriptionString.match(/secret ?spaces?/gi)) {
+    } else if (d.match(/secret ?spaces?/gi)) {
         return [
-            'Allow Many Possible Secrets',
-            'Large Secret Space'
+            'Allow many possible secrets',
+            'Large secret space'
         ];
-    } else if (descriptionString.match(/(secrets?)?.*external ?auth(orit(y|ies)|)?.*(secrets?)?/gi)) {
+    } else if (d.match(/(secrets?)?.*external ?auth(orit(y|ies)|)?.*(secrets?)?/gi)) {
         return [
-            'Check Secrets Against External Authority',
-            'External Authority Secret Checks'
+            'Check secrets against external authority',
+            'External authority secret checks'
         ];
-    } else if (descriptionString.match(/access ?control/gi)) {
+    } else if (d.match(/access ?control/gi)) {
         return [
-            'Configure Access Control',
-            'Access Controller'
+            'Configure access control',
+            'Access controller'
         ];
-    } else if (descriptionString.match(/prox(y|ies)/gi)) {
+    } else if (d.match(/prox(y|ies)/gi)) {
         return [
-            'Use Proxy Communication',
-            'Communication Proxy'
+            'Use proxy communication',
+            'Communication proxy'
         ];
-    } else if (descriptionString.match(/(monitor|watch|check)?.*integrity.*(monitor(ing)?s?)?/gi)) {
+    } else if (d.match(/(monitor|watch|check)?.*integrity.*(monitor(ing)?s?)?/gi)) {
         return [
-            'Monitor Integrity',
-            'Integrity Monitor'
+            'Monitor integrity',
+            'Integrity monitor'
         ];
-    } else if (descriptionString.match(/(do|perform|initiate).*test(ing)?.*(for|to)/gi)) {
+    } else if (d.match(/(do|perform|initiate).*test(ing)?.*(for|to)/gi)) {
         return [
-            'Scan or Test for Vulnerabilities',
-            'Vulnerability Scanner'
+            'Scan or test for vulnerabilities',
+            'Vulnerability scanner'
         ];
-    } else if (descriptionString.match(/indirect ?references?/gi)) {
+    } else if (d.match(/indirect ?references?/gi)) {
         return [
-            'Use Indirect References',
-            'Indirect Referencer'
+            'Use indirect references',
+            'Indirect referencer'
         ];
-    } else if (descriptionString.match(/blank ?index.?html?/gi)) {
+    } else if (d.match(/blank ?index.?html?/gi)) {
         return [
-            'Use Blank index.html',
+            'Use blank index.html',
             'Blank index.html'
         ];
-    } else if (descriptionString.match(/(prevent|disable|prohibit).*htaccess/gi)) {
+    } else if (d.match(/(prevent|disable|prohibit).*htaccess/gi)) {
         return [
-            'Prevent With .htaccess',
-            '.htaccess File'
+            'Prevent with .htaccess',
+            '.htaccess file'
         ];
-    } else if (descriptionString.match(/suppress(ing) ?error ?(messages?)?/gi)) {
+    } else if (d.match(/suppress(ing) ?error ?(messages?)?/gi)) {
         return [
-            'Suppress Error Messages',
-            'Error Message Suppressor'
+            'Suppress error messages',
+            'Error message suppressor'
         ];
-    } else if (descriptionString.match(/env(ironment) (file|variable)s?/gi)) {
+    } else if (d.match(/env(ironment) (file|variable)s?/gi)) {
         return [
-            'Protect Environment Variables',
-            'Environment Variable Protector'
+            'Protect environment variables',
+            'Environment variable protector'
         ];
-    } else if (descriptionString.match(/config(uration)s? (file|variable)s?/gi)) {
+    } else if (d.match(/config(uration)s? (file|variable)s?/gi)) {
         return [
-            'Protect Configuration Files',
-            'Configuration Protector'
+            'Protect configuration files',
+            'Configuration protector'
         ];
-    } else if (descriptionString.match(/(assume|assumption|foresee).*((malicious|destructive|dangerous)|inputs?)+/gi)) {
+    } else if (d.match(/(assume|assumption|foresee).*((malicious|destructive|dangerous)|inputs?)+/gi)) {
         return [
-            'Assume Input is Malicious',
-            'Input is Malicious Assumption'
+            'Assume input is malicious',
+            'Input is malicious assumption'
         ];
-    } else if (descriptionString.match(/(minimize|limit).*(switch(es)?|options?)/gi)) {
+    } else if (d.match(/(minimize|limit).*(switch(es)?|options?)/gi)) {
         return [
-            'Minimize Switches and Options',
-            'Minimal Switches and Options'
+            'Minimize switches and options',
+            'Minimal switches and options'
         ];
-    } else if (descriptionString.match(/(remove|disable|delete).*test(ing)?.*prod(uction)?/gi)) {
+    } else if (d.match(/(remove|disable|delete).*test(ing)?.*prod(uction)?/gi)) {
         return [
-            'Delete Debug Testing in Production',
-            'No Debug Testing in Production'
+            'Delete debug testing in production',
+            'No debug testing in production'
         ];
-    } else if (descriptionString.match(/type ?conversion/gi)) {
+    } else if (d.match(/type ?conversion/gi)) {
         return [
-            'Use Type Conversion',
-            'Type Converter'
+            'Use type conversion',
+            'Type converter'
         ];
-    } else if (descriptionString.match(/authenticat(e|ion)/gi)) {
+    } else if (d.match(/authenticat(e|ion)/gi)) {
         return [
-            'Authenticate Users',
+            'Authenticate users',
             'Authenticator'
         ];
-    } else if (descriptionString.match(/cryptographic|encryption.*data/gi)) {
+    } else if (d.match(/cryptographic|encryption.*data/gi)) {
         return [
-            'Encrypt Data',
-            'Data Encrypter'
+            'Encrypt data',
+            'Data encrypter'
         ];
-    } else if (descriptionString.match(/(sanitize[sd]?.*contents?)|(contents?.*sanitize[sd]?)/gi)) {
+    } else if (d.match(/(sanitize[sd]?.*contents?)|(contents?.*sanitize[sd]?)/gi)) {
         return [
-            'Sanitize Content',
-            'Content Sanitizer'
+            'Sanitize content',
+            'Content sanitizer'
         ];
-    } else if (descriptionString.match(/(difficult.*)?session ?(tokens?|ids?|keys?)(.*difficult)?/gi)) {
+    } else if (d.match(/(difficult.*)?session ?(tokens?|ids?|keys?)(.*difficult)?/gi)) {
         return [
-            'Use Strong Session Tokens',
-            'Strong Session Token Checker'
+            'Use strong session tokens',
+            'Strong session token checker'
         ];
-    } else if (descriptionString.match(/session ?(tokens?|ids?|keys?)/gi)) {
+    } else if (d.match(/session ?(tokens?|ids?|keys?)/gi)) {
         return [
-            'Use Session Tokens',
-            'Session Token Checker'
+            'Use session tokens',
+            'Session token checker'
         ];
-    } else if (descriptionString.match(/key (spaces? ?)?(sizes?|search(es)?)/gi)) {
+    } else if (d.match(/key (spaces? ?)?(sizes?|search(es)?)/gi)) {
         return [
-            'Use Sufficiently Complex Decryption Key',
-            'Complex Decryption Key'
+            'Use sufficiently complex decryption key',
+            'Complex decryption key'
         ];
-    } else if (descriptionString.match(/saml/gi)) {
+    } else if (d.match(/saml/gi)) {
         return [
-            'Use Security Assertion Markup Language (SAML) for Communication',
-            'Security Assertion Markup Language (SAML) Communication'
+            'Use security assertion markup language (SAML) for communication',
+            'Security assertion markup language (SAML) communication'
         ];
-    } else if (descriptionString.match(/code ?book/gi)) {
+    } else if (d.match(/code ?book/gi)) {
         return [
-            'Use a Code Book',
-            'Code Book'
+            'Use a code book',
+            'Code book'
         ];
-    } else if (descriptionString.match(/(hide|obfuscate|customiz(e|ing)).*(http|api('s)?|cookies?)/gi)) {
+    } else if (d.match(/(hide|obfuscate|customiz(e|ing)).*(http|api('s)?|cookies?)/gi)) {
         return [
-            'Hide Data',
-            'Data Hider'
+            'Hide data',
+            'Data hider'
         ];
-    } else if (descriptionString.match(/(scan|search for) virus(es)?|anti[- ]?virus|virus (scanning|searching)/gi)) {
+    } else if (d.match(/(scan|search for) virus(es)?|anti[- ]?virus|virus (scanning|searching)/gi)) {
         return [
-            'Install Anti-virus Software',
-            'Anti-virus Software'
+            'Install anti-virus software',
+            'Anti-virus software'
         ];
-    } else if (descriptionString.match(/(robust|strong|tough).*xml.*parser/gi)) {
+    } else if (d.match(/(robust|strong|tough).*xml.*parser/gi)) {
         return [
-            'Use a Strong XML Parser',
-            'Strong XML Parser'
+            'Use a strong XML parser',
+            'Strong XML parser'
         ];
-    } else if (descriptionString.match(/(e-mail|email|mail).*filter(ing|s)/gi)) {
+    } else if (d.match(/(e-mail|email|mail).*filter(ing|s)/gi)) {
         return [
-            'Filter E-mail',
-            'E-mail Filterer'
+            'Filter e-mail',
+            'E-mail filterer'
         ];
-    } else if (descriptionString.match(/symbolic links?|symlinks?/gi)) {
+    } else if (d.match(/symbolic links?|symlinks?/gi)) {
         return [
-            'Check for Symbolic Links',
-            'Symbolic Link Checker'
+            'Check for symbolic links',
+            'Symbolic link checker'
         ];
-    } else if (descriptionString.match(
-        /buffers?.*(overflow(ed|s)?|check ?(the )?size)|(overflow(ed|s)?|check ?(the )?size).*buffers?/gi)) {
+    } else if (d.match(/buffers?.*(overflow(ed|s)?|check ?(the )?size)|(overflow(ed|s)?|check ?(the )?size).*buffers?/gi)) {
         return [
-            'Prevent Buffer Overflow',
-            'Buffer Overflow Preventor'
+            'Prevent buffer overflow',
+            'Buffer overflow preventor'
         ];
-    } else if (descriptionString.match(/check(s|ing)? bounds?|bounds? check(s|ing)?/gi)) {
+    } else if (d.match(/check(s|ing)? bounds?|bounds? check(s|ing)?/gi)) {
         return [
-            'Check Buffer Bounds',
-            'Buffer Bounds Checker'
+            'Check buffer bounds',
+            'Buffer bounds checker'
         ];
-    } else if (descriptionString.match(/(dangerous|risky|riskful|tricky).* api/gi)) {
+    } else if (d.match(/(dangerous|risky|riskful|tricky).* api/gi)) {
         return [
-            'Avoid Risky APIs',
-            'API Risk Checker'
+            'Avoid risky APIs',
+            'API risk checker'
         ];
-    } else if (descriptionString.match(/sha(ke)?[- ]?\d+(\/\d+)?|strong ?hash/gi)) {
+    } else if (d.match(/sha(ke)?[- ]?\d+(\/\d+)?|strong ?hash/gi)) {
         return [
-            'Use Strong Hash Algorithms (like SHA-256 or SHA-512)',
-            'Strong Hash Algorithm (like SHA-256 or SHA-512)'
+            'Use strong hash algorithms (like SHA-256 or SHA-512)',
+            'Strong hash algorithm (like SHA-256 or SHA-512)'
         ];
-    } else if (descriptionString.match(/users?.*log ?out|log ?out.*users?/gi)) {
+    } else if (d.match(/users?.*log ?out|log ?out.*users?/gi)) {
         return [
-            'Force Users to Logout',
-            'Logout Forcer'
+            'Force users to logout',
+            'Logout forcer'
         ];
-    } else if (descriptionString.match(/secur(e|ity) questions?/gi)) {
+    } else if (d.match(/secur(e|ity) questions?/gi)) {
         return [
-            'Use Security Questions for Password Recovery',
-            'Security Questions'
+            'Use security questions for password recovery',
+            'Security questions'
         ];
-    } else if (descriptionString.match(/(e-mail|email|mail).*(temp(orary)? )?password/gi)) {
+    } else if (d.match(/(e-mail|email|mail).*(temp(orary)? )?password/gi)) {
         return [
-            'E-mail Temporary Password instead of Doing it Online',
-            'Temporary Password Sent By E-mail'
+            'E-mail temporary password instead of doing it online',
+            'Temporary password sent by e-mail'
         ];
-    } else if (descriptionString.match(
-        /hmac|keyed-hash message authentication code|hash-based message authentication code/gi)) {
+    } else if (d.match(/hmac|keyed-hash message authentication code|hash-based message authentication code/gi)) {
         return [
-            'Use Hashed Message Authentication Code (HMAC) to Verify Messages',
-            'HMAC Verifier'
+            'Use hashed message authentication code (HMAC) to verify messages',
+            'HMAC verifier'
         ];
-    } else if (descriptionString.match(/audit ?log(ger)?/gi)) {
+    } else if (d.match(/audit ?log(ger)?/gi)) {
         return [
-            'Implement an Audit Log',
-            'Audit Log'
+            'Implement an audit log',
+            'Audit log'
         ];
-    } else if (descriptionString.match(/(weak|bad|silly|useless).*encryption/gi)) {
+    } else if (d.match(/(weak|bad|silly|useless).*encryption/gi)) {
         return [
-            'Prevent Weak Encryption',
-            'Weak Encryption Preventer'
+            'Prevent weak encryption',
+            'Weak encryption preventer'
         ];
-    } else if (descriptionString.match(/sim.{0,10}card/gi)) {
+    } else if (d.match(/sim.{0,10}card/gi)) {
         return [
-            'Upgrade SIM Card Algorithm',
-            'Strong SIM Card Algorithm'
+            'Upgrade SIM card algorithm',
+            'Strong SIM card algorithm'
         ];
-    } else if (descriptionString.match(/(do( not|n't)|avoid).*us(e|ing).*get.*post/gi)) {
+    } else if (d.match(/(do( not|n't)|avoid).*us(e|ing).*get.*post/gi)) {
         return [
-            'Use POST- over GET-requests for Submitting Data',
-            'POST-requests for Submitting Data'
+            'Use POST- over GET-requests for submitting data',
+            'POST-requests for submitting data'
         ];
-    } else if (descriptionString.match(/(encod|decod)(e|ing).*(urls?|param(eters?|s)?)/gi)) {
+    } else if (d.match(/(encod|decod)(e|ing).*(urls?|param(eters?|s)?)/gi)) {
         return [
-            'Encode/Decode URL or Parameters Safely',
-            'Safe URL and Parameter Encoder/Decoder'
+            'Encode/decode URL or parameters safely',
+            'Safe URL and parameter encoder/decoder'
         ];
-    } else if (descriptionString.match(/efkwaefnwerjfadawejkldadklawejkldnwefwerfawdjawedwejndw/gi)) {
+    } else if (d.match(/paths?.*(encod|decod)(e|ing)|(encod|decod)(e|ing).*paths?/gi)) {
         return [
-            '',
-            ''
+            'Encode/decode URL or parameters safely',
+            'Safe URL and parameter encoder/decoder'
         ];
-    } else if (descriptionString.match(/efkwaefnwerjfadawejkldadklawejkldnwefwerfawdjawedwejndw/gi)) {
+    } else if (d.match(/scan (http|url) ?requests?/gi)) {
         return [
-            '',
-            ''
+            'Scan for valid URL',
+            'URL scanner'
         ];
-    } else if (descriptionString.match(/efkwaefnwerjfadawejkldadklawejkldnwefwerfawdjawedwejndw/gi)) {
+    } else if (d.match(/(detect|scan for|search( for)?|discover) (the)? ?sniffers?/gi)) {
         return [
-            '',
-            ''
+            'Scan for network sniffer',
+            'Network sniffer scanner'
         ];
-    } else if (descriptionString.match(/efkwaefnwerjfadawejkldadklawejkldnwefwerfawdjawedwejndw/gi)) {
+    } else if (d.match(/(never|do(n't| not)|avoid).*(own|private|self[- ]?made) (encryption|cryptography)/gi)) {
         return [
-            '',
-            ''
+            'Avoid self-made cryptography',
+            'No self-made cryptography'
         ];
-    } else if (descriptionString.match(/efkwaefnwerjfadawejkldadklawejkldnwefwerfawdjawedwejndw/gi)) {
+    } else if (d.match(/security ?(by ?)?obscurity.*inject(ion)?/gi)) {
         return [
-            '',
-            ''
+            'Don\'t rely on security by obscurity for to avoid injection',
+            'Don\'t use security by obscurity for injection'
         ];
-    } else if (descriptionString.match(/efkwaefnwerjfadawejkldadklawejkldnwefwerfawdjawedwejndw/gi)) {
+    } else if (d.match(/config(uration)?s?.*(separate|memory|space|cd|process|device).*config(uration)?s?/gi)) {
         return [
-            '',
-            ''
+            'Use separate storing of configuration',
+            'Store configuration separately'
+        ];
+    } else if (d.match(/(separate|divide) (the)? ?(presentation|business)[- ]?layers?.*(separate|divided)?/gi)) {
+        return [
+            'Separate the business and presentation layers',
+            'Separate business and presentation layers'
+        ];
+    } else if (d.match(/encapsulat(e|ion)/gi)) {
+        return [
+            'Encapsulate variables',
+            'Encapsulated variables'
+        ];
+    } else if (d.match(/backslash(ed|es)?.*escape[ds]?/gi)) {
+        return [
+            'Verify escaped characters',
+            'Escaped character verifier'
+        ];
+    } else if (d.match(/(not|avoid|do(n't| not)|never).*hard[- ]?cod(e|ing)/gi)) {
+        return [
+            'Avoid hard-coding',
+            'No hard-coding'
+        ];
+    } else if (d.match(/languages? ?apis?.*(os'?|operati(ng|on) ?sys(tem)?).*commands?/gi)) {
+        return [
+            'Use language APIs over OS commands',
+            'Language APIs used over OS commands'
+        ];
+    } else if (d.match(
+        /(filter|remove|delete).*(data|parameter|string)s?.*(os'?|operati(ng|on) ?sys(tem)?).*commands?/gi)) {
+        return [
+            'Filter out potential OS commands',
+            'OS command filterer'
+        ];
+    } else if (d.match(/public ?(key)?.*sign(ed)?|sign(ed)?.*public ?(key)?/gi)) {
+        return [
+            'Sign public key',
+            'Public key signer'
         ];
     }
 

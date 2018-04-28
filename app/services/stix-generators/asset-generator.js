@@ -29,37 +29,37 @@ function genAssetText() {
  * @returns {string | null} A formatted string representing a generalized category of this asset. null if not found.
  */
 function categorize(description) {
-    let descriptionString = description.join(' ');
+    let d = description.join(' ');
 
-    if (descriptionString.match(/client ?(machine|software|browser)/gi)) {
+    if (d.match(/client ?(machine|software|browser)/gi)) {
         return 'Client';
-    } else if (descriptionString.match(/file ?system/gi)) {
+    } else if (d.match(/file ?system/gi)) {
         return 'File System';
-    } else if (descriptionString.match(/server ?(side)? ?(function|func)/gi)) {
+    } else if (d.match(/server ?(side)? ?(function|func)/gi)) {
         return 'Server Side Function';
-    } else if (descriptionString.match(/ldap/gi)) {
+    } else if (d.match(/ldap/gi)) {
         return 'LDAP System';
-    } else if (descriptionString.match(/(scripting|script) ?host/gi)) {
+    } else if (d.match(/(scripting|script) ?host/gi)) {
         return 'Scripting Host';
-    } else if (descriptionString.match(/sessions? ?((handling|handler|management|mechanism|system) ?)+/gi)) {
+    } else if (d.match(/sessions? ?((handling|handler|management|mechanism|system) ?)+/gi)) {
         return 'Session Management System';
-    } else if (descriptionString.match(/error? ?((handling|handler|management|mechanism|system) ?)+/gi)) {
+    } else if (d.match(/error? ?((handling|handler|management|mechanism|system) ?)+/gi)) {
         return 'Error Handling System';
-    } else if (descriptionString.match(/(xml|json) ?(parser|handler)/gi)) {
+    } else if (d.match(/(xml|json) ?(parser|handler)/gi)) {
         return 'Data Parser';
-    } else if (descriptionString.match(/database/gi)) {
+    } else if (d.match(/database/gi)) {
         return 'Database';
-    } else if (descriptionString.match(/(email|e-mail|mail)/gi)) {
+    } else if (d.match(/(email|e-mail|mail)/gi)) {
         return 'E-mail System';
-    } else if (descriptionString.match(/overflow(ed)? ?.*buffer/gi)) {
+    } else if (d.match(/overflow(ed)? ?.*buffer/gi)) {
         return 'Buffer';
-    } else if (descriptionString.match(/config(uration) ?(files?|sources?)/gi)) {
+    } else if (d.match(/config(uration) ?(files?|sources?)/gi)) {
         return 'Configuration File';
-    } else if (descriptionString.match(/((commands?|requests?) ?)+ ?(interpreter|handler|system)/gi)) {
+    } else if (d.match(/((commands?|requests?) ?)+ ?(interpreter|handler|system)/gi)) {
         return 'Command Interpreter';
-    } else if (descriptionString.match(/(messages?|communications?)/gi)) {
+    } else if (d.match(/(messages?|communications?)/gi)) {
         return 'Message';
-    } else if (descriptionString.match(/(operati(ng|on) ?sys(tem)s?|os)/gi)) {
+    } else if (d.match(/(operati(ng|on) ?sys(tem)s?|os)/gi)) {
         return 'Operating System';
     }
 
