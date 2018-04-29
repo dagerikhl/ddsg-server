@@ -24,7 +24,6 @@ describe('The file handler module', function () {
         contentString = JSON.stringify(content);
         fileName = 'test.json';
         correctPath = path.join(basePath, fileName);
-
     });
 
     describe('#getFileContent()', function () {
@@ -150,7 +149,7 @@ describe('The file handler module', function () {
         beforeEach(function () {
             readStreamStub = sinon.stub(fs, 'createReadStream');
             readStreamStub.returns({
-                pipe: (destination) => {
+                pipe: () => {
                     return {
                         on: onSpy
                     };
