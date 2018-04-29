@@ -1,7 +1,7 @@
 const axios = require('axios');
 
 function get(url, cb) {
-    axios.get(url)
+    return axios.get(url)
         .then(res => {
             cb(res.data);
         })
