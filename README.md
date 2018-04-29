@@ -85,3 +85,11 @@ Server repository.
 
 ### Production specific dependecies
 - In production, the server uses [node-schedule](https://www.npmjs.com/package/node-schedule) to schedule and perform an update of data from data sources at 00:30 every night.
+
+## Notes
+
+### CWE removed as data source
+
+On 2018-04-25 CWE was removed as a data source. This included all the logic for fetching data from that source. This was done to avoid cluttering the code with no-longer used code.
+
+However, should this code become relevant at a later date, the code was removed in isolated commits so it can easily be added back in. The commits are `49c43ba628b8cfe6cea7a3a147ab23a220fc813b`, `1a2112bcafdb129a8d77dc931d1f725e91a2efce`, and `9d98df16f1b4998ac444146aee2ecd315a5387e8`.
