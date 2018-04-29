@@ -10,17 +10,6 @@ function get(url, cb) {
         });
 }
 
-function getBinary(url, cb) {
-    axios.get(url, { responseType: 'arraybuffer' })
-        .then(res => {
-            cb(res.data);
-        })
-        .catch(err => {
-            logger.error(err);
-        });
-}
-
 module.exports = {
-    get,
-    getBinary
+    get
 };

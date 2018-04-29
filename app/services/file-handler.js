@@ -1,6 +1,5 @@
 const fs = require('fs');
 const path = require('path');
-const unzip = require('unzip');
 
 const basePath = 'data';
 
@@ -24,24 +23,8 @@ function removeFile(fileName) {
     }
 }
 
-function extractEntryFromZipFile(zipFileName, entryFileName, cb) {
-    fs.createReadStream(path.join(basePath, zipFileName))
-        .pipe(unzip.Parse())
-        .on('entry', (entry) => {
-            if (entry.path === entryFileName) {
-                const stream = fs.createWriteStream(path.join(basePath, entryFileName));
-                stream.addListener('close', cb);
-
-                entry.pipe(stream);
-            } else {
-                entry.autodrain();
-            }
-        });
-}
-
 module.exports = {
     getFileContent,
     setFileContent,
-    removeFile,
-    extractEntryFromZipFile
+    removeFile
 };
