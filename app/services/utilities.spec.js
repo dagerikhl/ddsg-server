@@ -73,4 +73,31 @@ describe('The utilities module', function () {
             uuid.should.match(uuidV4Regex);
         });
     });
+
+    describe('#uniqueFilter()', function () {
+        let uniqueFilterSpy;
+
+        before(function () {
+            uniqueFilterSpy = sinon.spy(utilities, 'uniqueFilter');
+        });
+
+        after(function () {
+            uniqueFilterSpy.restore();
+        });
+
+        it('should return an array with only unique elements from an array with duplicates', function () {
+            const data = [
+                1,
+                1,
+                2,
+                2,
+                2
+            ];
+
+            const filteredData = data.filter(utilities.uniqueFilter);
+
+            data.length.should.be.equal(5);
+            filteredData.length.should.be.equal(2);
+        });
+    });
 });
