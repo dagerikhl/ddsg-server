@@ -214,7 +214,7 @@ function extractExample(exampleObject) {
             let referenceText = stixGeneralGen.buildJoinedRecursiveText(references);
 
             if (referenceText.match(/CVE-\d{4}-\d+/g)) {
-                example.external_references = stixGeneralGen.genCveExternalReference(referenceText);
+                example.external_references = [stixGeneralGen.genCveExternalReference(referenceText)];
             } else {
                 example.external_references = [referenceText];
             }
