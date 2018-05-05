@@ -17,7 +17,8 @@ function genMitreExternalReferences(source, id) {
         {
             source_name: `${source.toLowerCase()}`,
             id: `${source.toUpperCase()}-${id}`,
-            url: `https://${source}.mitre.org/data/definitions/${id}.html`
+            url: `https://${source}.mitre.org/data/definitions/${id}.html`,
+            description: null
         }
     ];
 }
@@ -26,7 +27,17 @@ function genCveExternalReference(name) {
     return {
         source_name: 'cve',
         id: name.toUpperCase(),
-        url: `http://cve.mitre.org/cgi-bin/cvename.cgi?name=${name}`
+        url: `http://cve.mitre.org/cgi-bin/cvename.cgi?name=${name}`,
+        description: null
+    };
+}
+
+function genUnknownExternalReference(description) {
+    return {
+        source_name: 'unknown',
+        id: null,
+        url: null,
+        description
     };
 }
 
@@ -70,6 +81,7 @@ module.exports = {
     createEntity,
     genMitreExternalReferences,
     genCveExternalReference,
+    genUnknownExternalReference,
     buildJoinedRecursiveText,
     buildRecursiveText
 };

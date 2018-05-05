@@ -187,6 +187,8 @@ function extractAttackPhase(phaseObject) {
 }
 
 function extractExample(exampleObject) {
+    const cveRegex = /CVE-\d{4}-\d+/g;
+
     let example = {
         description: null,
         external_references: null
@@ -204,19 +206,21 @@ function extractExample(exampleObject) {
             example.external_references = references.map((reference) => {
                 let referenceText = stixGeneralGen.buildJoinedRecursiveText(reference);
 
-                if (referenceText.match(/CVE-\d{4}-\d+/g)) {
-                    return stixGeneralGen.genCveExternalReference(referenceText);
+                let cveId = referenceText.match(cveRegex);
+                if (cveId) {
+                    return stixGeneralGen.genCveExternalReference(cveId[0]);
                 }
 
-                return referenceText;
+                return stixGeneralGen.genUnknownExternalReference(referenceText);
             });
         } else if (references && typeof references === 'object') {
             let referenceText = stixGeneralGen.buildJoinedRecursiveText(references);
 
-            if (referenceText.match(/CVE-\d{4}-\d+/g)) {
-                example.external_references = [stixGeneralGen.genCveExternalReference(referenceText)];
+            let cveId = referenceText.match(cveRegex);
+            if (cveId) {
+                example.external_references = [stixGeneralGen.genCveExternalReference(cveId[0])];
             } else {
-                example.external_references = [referenceText];
+                example.external_references = [stixGeneralGen.genUnknownExternalReference(referenceText)];
             }
         }
     }
