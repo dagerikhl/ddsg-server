@@ -14,8 +14,6 @@ function genRelationshipOfType(type, source, relateds, reverse = false) {
             relationship.target_ref = related.id;
         }
 
-        relationship.custom = null;
-
         relationships.push(relationship);
     }
 
