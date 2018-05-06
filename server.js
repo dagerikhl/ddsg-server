@@ -16,10 +16,16 @@ const app = express();
 // Register routes
 require('./app/routes')(app);
 
-// Listen on host port
-app.listen(+process.env.PORT, process.env.HOST, () => {
-    logger.info(`Server started on port ${process.env.PORT}. Listening...`);
-});
+// Listen on port, and specific host if specified
+if (process.env.HOST) {
+    app.listen(+process.env.PORT, process.env.HOST, () => {
+        logger.info(`Server started on host ${process.env.HOST} on port ${process.env.PORT}. Listening...`);
+    });
+} else {
+    app.listen(+process.env.PORT, () => {
+        logger.info(`Server started on port ${process.env.PORT}. Listening...`);
+    });
+}
 
 // Keep data up to date
 if (process.env.NODE_ENV === 'production') {
