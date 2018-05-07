@@ -17,13 +17,19 @@ const app = express();
 require('./app/routes')(app);
 
 // Listen on port, and specific host if specified
+var port = (+process.env.port || port || 8000);
+// DEBUG
+console.log(process.env.port);
+console.log(process.env.PORT);
+console.log(port);
+// DEBUG
 if (process.env.HOST) {
-    app.listen(+process.env.PORT, process.env.HOST, () => {
-        logger.info(`Server started on host ${process.env.HOST} on port ${process.env.PORT}. Listening...`);
+    app.listen(port, process.env.HOST, () => {
+        logger.info(`Server started on host ${process.env.HOST} on port ${port}. Listening...`);
     });
 } else {
-    app.listen(+process.env.PORT, () => {
-        logger.info(`Server started on port ${process.env.PORT}. Listening...`);
+    app.listen(port, () => {
+        logger.info(`Server started on port ${port}. Listening...`);
     });
 }
 
