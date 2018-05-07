@@ -24,7 +24,6 @@ function fetchUpdatedDataFromSources() {
     // Fetch CAPEC source
     versionScraper.getNewestVersionOfSource('capec', (version) => {
         sourceFetcher.fetchCapecData(version, (data) => {
-            logger.info('CAPEC source fetched.');
             objects.capecObjects = data;
 
             if (process.env.USE_FILE_SYSTEM === 'true' && process.env.LOCAL_JSON_STORE === 'true') {
