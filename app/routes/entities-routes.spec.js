@@ -14,6 +14,8 @@ describe('The entities routes function module', function () {
         sinon.stub(fileHandler, 'getFileContent').returns('{}');
         sinon.stub(fileHandler, 'setFileContent');
 
+        global.entities = {};
+
         app = { get: null };
 
         req = {
