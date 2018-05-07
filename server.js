@@ -17,7 +17,7 @@ const app = express();
 require('./app/routes')(app);
 
 // Listen on port, and specific host if specified
-var port = (+process.env.port || port || 8000);
+const port = +(process.env.port || port || 8000);
 // DEBUG
 console.log(process.env.port);
 console.log(process.env.PORT);
