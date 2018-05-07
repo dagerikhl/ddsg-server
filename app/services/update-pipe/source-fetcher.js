@@ -4,7 +4,7 @@ const fileHandler = require('../file-handler');
 const httpClient = require('../http-client');
 
 function fetchCapecData(version, cb) {
-    if (process.env.LOCAL_JSON_USE === 'true') {
+    if (process.env.USE_FILE_SYSTEM === 'true' && process.env.LOCAL_JSON_USE === 'true') {
         cb(JSON.parse(fileHandler.getFileContent('capecObjects.json')));
         return;
     }

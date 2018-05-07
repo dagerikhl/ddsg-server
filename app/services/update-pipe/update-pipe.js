@@ -27,7 +27,7 @@ function fetchUpdatedDataFromSources() {
             logger.info('CAPEC source fetched.');
             objects.capecObjects = data;
 
-            if (process.env.LOCAL_JSON_STORE === 'true') {
+            if (process.env.USE_FILE_SYSTEM === 'true' && process.env.LOCAL_JSON_STORE === 'true') {
                 fileHandler.setFileContent('capecObjects.json', JSON.stringify(data, null, 4));
             }
 
@@ -55,13 +55,17 @@ function saveEntities(entities) {
         entities
     };
 
-    let jsonData;
-    if (process.env.NODE_ENV === 'development') {
-        jsonData = JSON.stringify(data, null, 4);
+    if (process.env.USE_FILE_SYSTEM === 'true') {
+        let jsonData;
+        if (process.env.NODE_ENV === 'development') {
+            jsonData = JSON.stringify(data, null, 4);
+        } else {
+            jsonData = JSON.stringify(data);
+        }
+        fileHandler.setFileContent('entities.json', jsonData);
     } else {
-        jsonData = JSON.stringify(data);
+        global.entities = data;
     }
-    fileHandler.setFileContent('entities.json', jsonData);
 
     // Clear local state
     objects = {};
