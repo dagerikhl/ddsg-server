@@ -8,6 +8,7 @@ function getNewestVersionOfSource(source, cb) {
         xray('https://capec.mitre.org/data/index.html', '.header')((err, res) => {
             if (err) {
                 logger.error(err);
+                console.log(err);
                 return;
             }
 

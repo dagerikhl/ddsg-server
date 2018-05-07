@@ -7,6 +7,7 @@ function get(url, cb) {
         })
         .catch(err => {
             logger.error(err);
+            console.log(err);
         });
 }
 

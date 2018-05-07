@@ -18,6 +18,7 @@ function removeFile(fileName) {
         fs.unlink(path.join(basePath, fileName), (err) => {
             if (err) {
                 logger.error(`Error removing file ${fileName}:`, err);
+                console.log(`Error removing file ${fileName}:`, err);
             }
         });
     }
