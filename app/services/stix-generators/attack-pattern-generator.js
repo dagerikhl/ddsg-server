@@ -101,7 +101,7 @@ function genAttackMotivationConsequences() {
 function genInjectionVector() {
     let injectionVector = {
         description: null,
-        category: null
+        categories: null
     };
 
     const injectionVectorObject = capecObject['capec:Injection_Vector'];
@@ -110,7 +110,7 @@ function genInjectionVector() {
     }
 
     if (injectionVector.description) {
-        injectionVector.category = categorizeInjectionVector(injectionVector.description);
+        injectionVector.categories = categorizeInjectionVector(injectionVector.description);
     }
 
     return injectionVector;
