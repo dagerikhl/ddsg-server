@@ -1,4 +1,5 @@
 const stixGeneralGen = require('./general-generator');
+const stixAssetGen = require('./asset-generator');
 
 // Local state
 let capecObject = null;
@@ -128,11 +129,19 @@ function genPayload() {
 }
 
 function genActivationZone() {
-    let activationZone = null;
+    let activationZone = {
+        description: null,
+        categories: null
+    };
 
     const activationZoneObject = capecObject['capec:Activation_Zone'];
     if (activationZoneObject && activationZoneObject['capec:Text']) {
-        activationZone = activationZoneObject['capec:Text']['_text'];
+        activationZone.description = activationZoneObject['capec:Text']['_text'];
+    }
+
+    if (activationZone.description) {
+        // Uses asset generators categorization, it's important that these two stays in sync
+        activationZone.categories = [stixAssetGen.categorize([activationZone.description])];
     }
 
     return activationZone;
