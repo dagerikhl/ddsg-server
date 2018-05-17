@@ -339,7 +339,7 @@ function categorize(description) {
             'Don\'t rely on security by obscurity for to avoid injection',
             'Don\'t use security by obscurity for injection'
         ];
-    } else if (d.match(/config(uration)?s?.*(separate|memory|space|cd|process|device).*config(uration)?s?/gi)) {
+    } else if (d.match(/config(uration)?s?.*(separate|memory|space|cd|process|device).*(config(uration)?s?)?/gi)) {
         return [
             'Use separate storing of configuration',
             'Store configuration separately'
