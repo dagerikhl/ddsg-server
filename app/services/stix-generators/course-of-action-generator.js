@@ -94,7 +94,8 @@ function categorize(description) {
             'Keep system up to date',
             'System updater'
         ];
-    } else if (d.match(/not.*file[- ]?(name|content|type)s?/gi)) {
+    } else if (d.match(
+        /not.*file[- ]?(name|content|type)s?|(avoid|don't|do not|never).*(logic|decisions?).*(files?|names?)/gi)) {
         return [
             'Avoid basing logic on file-types',
             'Don\'t base logic on file-types'
@@ -199,7 +200,7 @@ function categorize(description) {
             'Sanitize content',
             'Content sanitizer'
         ];
-    } else if (d.match(/(difficult.*)?session ?(tokens?|ids?|keys?)(.*difficult)?/gi)) {
+    } else if (d.match(/(difficult.*)?session ?(tokens?|ids?|keys?)(.*difficult)?|eastlake|rfc1750/gi)) {
         return [
             'Use strong session tokens',
             'Strong session token checker'
@@ -283,6 +284,11 @@ function categorize(description) {
         return [
             'E-mail temporary password instead of doing it online',
             'Temporary password sent by e-mail'
+        ];
+    } else if (d.match(/pass(word)?.*recovery.*(system|functions|functionality).*(vulnerable|unprotected)/gi)) {
+        return [
+            'Protect password recovery system',
+            'Password recovery protector'
         ];
     } else if (d.match(/hmac|keyed-hash message authentication code|hash-based message authentication code/gi)) {
         return [
@@ -368,6 +374,12 @@ function categorize(description) {
         return [
             'Use language APIs over OS commands',
             'Language APIs used over OS commands'
+        ];
+    } else if (d.match(
+        /(os'?|operati(ng|on) ?sys(tem)?).*preventative.*functionality|preventative.*functionality.*(os'?|operati(ng|on) ?sys(tem)?)/gi)) {
+        return [
+            'Use OS-level preventative functionality',
+            'OS-level preventions'
         ];
     } else if (d.match(
         /(filter|remove|delete).*(data|parameter|string)s?.*(os'?|operati(ng|on) ?sys(tem)?).*commands?/gi)) {
