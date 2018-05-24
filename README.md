@@ -1,5 +1,7 @@
 # Data-driven Security Game (DdSG) Server
 
+Currently hosted at: [https://ddsg-server.herokuapp.com/](https://ddsg-server.herokuapp.com/). Contact me at [dagerikhl@gmail.com](mailto:dagerikhl@gmail.com) for questions about this deployed server.
+
 ## Introduction
 
 **Working title: _"STIX and Stones"_**
@@ -13,7 +15,7 @@ Server repository.
 1. Install Node and NPM _([Node.js](https://nodejs.org/en/))_.
 2. Run `npm install` to install dependencies.
 
-## Use
+## Use Locally
 
 **Note!** Requires some enviroment variables to be set. See section [Configuration](#configuration).
 
@@ -43,6 +45,21 @@ Server repository.
     - This logs the result to the console. It also generates a HTML coverage report in the folder `coverage` which you can view in your web browser.
     - **Note!** This also performs a normal run of the tests before generating coverage report.
 
+## Deployment
+
+- To deploy, use these environment variables (explained below):
+    ```
+    NODE_ENV=production
+    
+    LOCAL_JSON_STORE=false
+    LOCAL_JSON_USE=false
+    USE_FILE_SYSTEM=false
+    ```
+- The server can be deployed anywhere that can run a Node.js application.
+- For simple deployment, I recommend setting up a free Heroku server and deploy to that.
+    1. To set up a Heroku remote, follow this guide: [https://devcenter.heroku.com/articles/deploying-nodejs](https://devcenter.heroku.com/articles/deploying-nodejs).
+    2. Run `npm run deploy` to simply deploy to a Heroku remote after you have set one up and added its remote.
+
 ## Technologies
 
 - The server is written in Node using JavaScript (ES5).
@@ -56,6 +73,7 @@ Server repository.
     - **Note!** For local development, a local configuration-file, `.env`, with all environment variables is required.
         - **Note!** This file should _not_ be commited and used in production. The production server should have different values from local development.
         - **Note!** If environment variables are set through other means, such as npm scripts or server configuration, these are used over the configuration-file.
+        - **Note!** `HOST` is not required, and _should not_ be used in production.
 - Layout of configuration-file:
     ```dotenv
     NODE_ENV=<one of: { production, development, test }>
@@ -65,6 +83,7 @@ Server repository.
     
     LOCAL_JSON_STORE=<one of: { true, false }>
     LOCAL_JSON_USE=<one of: { true, false }>
+    USE_FILE_SYSTEM=<one of: { true, false }>
     ```
 
 ### Logging
@@ -72,7 +91,7 @@ Server repository.
 - The server usese [winston](https://www.npmjs.com/package/winston) for logging.
     - The logger logs to both console and the local log-files `combined.log` and `error.log`.
     - **Note!** This means you use `logger.debug(<...>)` instead of `console.log(<...>)` to log.
-    - **Note!** Currently using `winston@3.0.0-rc1` for additional new features, but this is not a stable version.
+    - **Note!** Currently using `winston@3.0.0-rc5` for additional new features, but this is not a stable version.
 
 ### Testing
 
