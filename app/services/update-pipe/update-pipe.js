@@ -21,34 +21,38 @@ let objects = {
 function fetchUpdatedDataFromSources() {
     logger.info('Updating data from sources...');
 
-    // Fetch CAPEC source
-    versionScraper.getNewestVersionOfSource('capec', (version) => {
-        sourceFetcher.fetchCapecData(version, (data) => {
-            objects.capecObjects = data;
+    return new Promise((resolve, reject) => {
+        // Fetch CAPEC source
+        versionScraper.getNewestVersionOfSource('capec', (version) => {
+            sourceFetcher.fetchCapecData(version, (data) => {
+                objects.capecObjects = data;
 
-            if (process.env.USE_FILE_SYSTEM === 'true' && process.env.LOCAL_JSON_STORE === 'true') {
-                fileHandler.setFileContent('capecObjects.json', JSON.stringify(data, null, 4));
-            }
+                if (process.env.USE_FILE_SYSTEM === 'true' && process.env.LOCAL_JSON_STORE === 'true') {
+                    fileHandler.setFileContent('capecObjects.json', JSON.stringify(data, null, 4));
+                }
 
-            filterAndGenEntities();
+                filterAndGenEntities(resolve, reject);
+            });
         });
     });
 }
 
-function filterAndGenEntities() {
+function filterAndGenEntities(resolve, reject) {
     // Only proceed when we have fetched all sources
     if (!objects.capecObjects) {
         logger.info('Attempting to filter and generate entities, but not all sources have finished fetching.');
+
+        reject();
         return;
     }
 
     filterer.filterByActiveFilters(objects, activeFilters);
     const stixEntities = entitiesGenerator.genStixEntities(objects);
 
-    saveEntities(stixEntities);
+    saveEntities(stixEntities, resolve, reject);
 }
 
-function saveEntities(entities) {
+function saveEntities(entities, resolve, reject) {
     const data = {
         created: utilities.timestamp(),
         entities
@@ -70,6 +74,8 @@ function saveEntities(entities) {
     objects = {};
 
     logger.info('Updating data from sources... Done.');
+
+    resolve();
 }
 
 module.exports = {
